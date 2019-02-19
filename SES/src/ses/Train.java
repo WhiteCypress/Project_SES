@@ -5,7 +5,6 @@
  */
 package ses;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
@@ -26,7 +25,7 @@ public class Train {
     double distanceFlat;
     double accelerationFlat;
     double accelerationAngle;
-    double movTime;
+    double movTimeFlat;
     double vMaxFlat;
     double vMaxAngle;
 
@@ -36,21 +35,22 @@ public class Train {
         return vMaxFlat;
     }
 
-    public double calculateDistanceFlat(double energy) {
-        distanceFlat = energy/(vMaxFlat/4)*2 ;//not sure
+    public double calculateDistanceFlat(double energy, double massTrain) {
+        distanceFlat = energy/(massTrain*9.81); //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
 
         return distanceFlat;
     }
 
-    public double calculateAccerlation(double vMax, double runTime) {
+    public double calculateAccerlation(double vMaxFlat, double distanceFlat) {
         accelerationFlat = (Math.pow(vMaxFlat, 2)) / (2 * distanceFlat);
 
         return accelerationFlat;
     }
 
-    public double calculateMovTime(double vMax, double acceleration) {
-
-        return acceleration;
+    public double calculateMovTime(double vMaxFlat, double acceleration) {
+        movTimeFlat = vMaxFlat/acceleration;
+        
+        return movTimeFlat;
     }
 
     public double calculateMaxVeloctiyAngle(double energy, double massTrain, double angle) {
