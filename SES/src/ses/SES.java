@@ -25,7 +25,6 @@ public class SES extends Application {
         
         stage.setScene(scene);
         stage.show();
-        System.out.println("skdfjsldk");
     }
 
     /**
