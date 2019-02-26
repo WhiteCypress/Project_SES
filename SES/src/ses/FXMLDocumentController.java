@@ -39,6 +39,19 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
+        
+        Engine engine = new Engine();       //testing values
+        engine.transferConstant = 14.4;      //home pot are normally stainless steel #304, so this is the value for it
+        engine.fireTemp = 230;              //the temperatur of home stove
+        engine.liquidInitialTemp = 20;
+        engine.thicCont = 0.01;
+        engine.liquidBoilPoint = 100;
+        
+        engine.liquidMass = 1; //15 L of water
+        engine.liquidSpecificHeat = 4.186*1000;
+        
+        System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
+        System.out.println(engine.calcHeatTransferRate() + " J/s , the change in temperature is: " + engine.calcTempInContChange(engine.calcHeatTransferRate()) + " kelvin");     //test end
     }
     
     @Override
