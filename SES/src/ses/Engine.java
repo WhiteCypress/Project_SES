@@ -14,18 +14,19 @@ public class Engine {
     double volCont;
     double thicCont;
     String typeLiq;
-    double volLiq;
-    double vapTime;
+    double volLiq;          //this thing is in L
     double liquidInitialTemp;
+    String materialComb;
+    double liquidMass;
     
     double fireTemp;    //all these are derived values
     double transferConstant;
     double liquidBoilPoint;
     double liquidSpecificHeat;
-    double liquidMass;
-    double liquidDensity;
+    double liquidDensity;           //this is in kg/L
     double latentVapHeat;
     double energy;
+    double vapTime;
     
     double heatTransferRate;   //all these are calculated values that will be reused
     
@@ -35,14 +36,16 @@ public class Engine {
         
     }
 
-    public Engine(String materialCont, double volCont, double thicCont, String typeLiq, double volLiq, double vapTime, double liquidInitialTemp) {
+    public Engine(String materialCont, double volCont, double thicCont, String typeLiq, double volLiq, double liquidInitialTemp, String materialComb, double liquidMass) {
         this.materialCont = materialCont;
         this.volCont = volCont;
         this.thicCont = thicCont;
         this.typeLiq = typeLiq;
-        this.volLiq = volLiq;
+        this.volLiq = volLiq;           
         this.vapTime = vapTime;
         this.liquidInitialTemp = liquidInitialTemp;
+        this.materialComb = materialComb;
+        this.liquidMass = liquidMass;
     }
     
     
@@ -86,7 +89,118 @@ public class Engine {
     public void setVolLiq(double volLiq) {
         this.volLiq = volLiq;
     }
+    
+    public void deriveFireTemp() {          //using this method will provide the fire temperature of the combustion
+        switch (materialComb){
+            case "stove": fireTemp = 230;
+                break;
+            
+            case "natrual gas": fireTemp = 1960;
+                break;
+                
+            case "metane": fireTemp = 1950;
+                break;
+             
+            case "hydrogene": fireTemp = 2210;
+                break;
+                
+            case "carbon monoxide": fireTemp = 2121;
+                break;
+                
+            case "wood": fireTemp = 600;
+                break;
+                
+            case "charcoal": fireTemp = 1100;
+                break;   
+        }
+    }
+    
+    public void deriveTransferConstant(){                   //this shows the heatTransferConstant for the container
+        switch (materialCont){
+            case "copper": transferConstant = 413;
+                break;
+            
+            case "aluminium": transferConstant = 237;
+                break;
+            
+            case "beryllium": transferConstant = 301;
+                break;
+                
+            case "boron": transferConstant = 301;
+                break;
+                
+            case "cadmium": transferConstant = 99.3;
+                break;
+                
+            case "cesium": transferConstant = 36.8;
+                break;
+                
+            case "chromium": transferConstant = 111;
+                break;
+                
+            case "cobalt": transferConstant = 122;
+                break;
+                
+            case "cold": transferConstant = 327;
+                break;
+                
+            case "hafnium": transferConstant = 24.4;
+                break;
+                
+            case "iridium": transferConstant = 153;
+                break;
+                
+            case "iron": transferConstant = 94;
+                break;
+              
+            case "lead": transferConstant = 36.6;
+                break;
+                
+            case "nickel": transferConstant = 106;
+                break;
+                
+            case "platinum": transferConstant = 72.4;
+                break;
+                
+            case "stainless-steel": transferConstant = 14.4;
+                break;    
+        }
+    }
 
+    public void deriveliquidInfo(){                   //this shows the heatTransferConstant for the container
+        switch (typeLiq){
+            case "water": 
+                liquidBoilPoint = 100;
+                liquidSpecificHeat = 4.19*1000;         //everything here is in J, L
+                latentVapHeat = 2256*1000;
+                break;  
+                
+            case "alcohol": 
+                liquidBoilPoint = 78.37;
+                liquidSpecificHeat = 2.3*1000;         //everything here is in J, L
+                latentVapHeat = 846*1000;
+                break;  
+                
+            case "ether": 
+                liquidBoilPoint = 34.6;
+                liquidSpecificHeat = 2.21*1000;         //everything here is in J, L
+                latentVapHeat = 377*1000;
+                break;  
+                
+            case "hexane": 
+                liquidBoilPoint = 68;
+                liquidSpecificHeat = 2.26*1000;         //everything here is in J, L
+                latentVapHeat = 365*1000;
+                break;  
+                
+            case "water": 
+                liquidBoilPoint = 100;
+                liquidSpecificHeat = 4.19*1000;         //everything here is in J, L
+                latentVapHeat = 2256*1000;
+                break;  
+        }
+    }
+    
     public double calcVapTime() {       //will return how long it takes to vaporize all liquid in container
         vapTime = volLiq*liquidDensity*latentVapHeat/heatTransferRate;
         
@@ -114,7 +228,7 @@ public class Engine {
     }
 
     public double calcEnergy() {
-        energy = 0;                              //THis is not what it is
+        energy = 0;                              //This is not what it is
         
         return energy;
     }

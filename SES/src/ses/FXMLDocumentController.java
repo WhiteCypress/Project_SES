@@ -51,7 +51,7 @@ public class FXMLDocumentController implements Initializable {
         engine.liquidSpecificHeat = 4.186*1000;
         
         System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
-        System.out.println(engine.calcHeatTransferRate() + " J/s , the change in temperature is: " + engine.calcTempInContChange(engine.calcHeatTransferRate()) + " kelvin");     //test end
+        System.out.println(engine.calcHeatTransferRate() + " J/s , the change in temperature is: " + engine.calcTempInContChange(engine.calcHeatTransferRate()) + " kelvin every second");     //test end
     }
     
     @Override
