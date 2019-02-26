@@ -8,7 +8,6 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 
 public class AssetManager {
 

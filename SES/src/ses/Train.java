@@ -5,8 +5,6 @@
  */
 package ses;
 
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 
 /**
@@ -18,24 +16,31 @@ public class Train {
     private double massTrain;
     private double energy;
     private double angle;
+    private double distanceFlat;
     private double distanceX;
     private double distanceY;
-    private double distanceNet;
-    private double distanceFlat;
-    private double distanceAngle;
+    //private double distanceNetAngle;
+    private double distanceOnRamp;
+    private double timeTravelledOnRamp;
     private double accelerationFlat;
-    private double accelerationAngle;
+    private double vAngle;
     private double movTime;
     private double vMaxFlat;
-    private double vMaxAngle;
+    private double trainCurrentVelocity;
+    
+    public Train(double massTrain, double energy, double angle) {
+        this.massTrain = massTrain;
+        this.energy = energy;
+        this.angle = angle;
+    }
 
-    public double calculateMaxVeloctiyFlat(double power, double movTime, double massTrain) {
+    public double calculateMaxVeloctiyFlat(double power) {
         vMaxFlat = Math.abs(sqrt((2 * movTime * power) / massTrain));
 
         return vMaxFlat;
     }
 
-    public double calculateDistanceFlat(double movTime) {
+    public double calculateDistanceFlat() {
         distanceFlat = vMaxFlat * movTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
 
         return distanceFlat;
@@ -47,19 +52,24 @@ public class Train {
         return accelerationFlat;
     }
 
-    public double calculateDistanceAngle(double massTrain) {
+    public double calculateDistanceOnRamp() {
+        distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
+        timeTravelledOnRamp = (vMaxFlat * Math.sin(angle)) / 9.81;
+        distanceX = vMaxFlat * Math.cos(angle) * timeTravelledOnRamp;
+        distanceOnRamp = Math.sqrt((Math.pow(distanceX, 2)) + (Math.pow(distanceY, 2)));
 
-        return distanceAngle;
+        return distanceOnRamp;
     }
 
-    public double calculateMaxVeloctiyAngle(double massTrain) {
+    /*public double calculateDistanceAngle() {
+        distanceNetAngle = distanceOnRamp * 2 + vMaxFlat * movTime;
+        
+        return distanceNetAngle;
+    }*/
+    public double calculateVelocityAngle(double vMaxFlat, double time) {
+        vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
 
-        return distanceAngle;
-    }
-
-    public double calculateAccerlationAngle(double vMaxFlat, double distanceFlat) {
-
-        return accelerationAngle;
+        return vAngle;
     }
 
 }
