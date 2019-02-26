@@ -16,7 +16,6 @@ public class Engine {
     String typeLiq;
     double volLiq;
     double vapTime;
-    double energy;
     double liquidInitialTemp;
     
     double fireTemp;    //all these are derived values
@@ -26,14 +25,27 @@ public class Engine {
     double liquidMass;
     double liquidDensity;
     double latentVapHeat;
+    double energy;
     
     double heatTransferRate;   //all these are calculated values that will be reused
     
-    double area;     //this is the area of the button and it's set to be 1sqmeter by default
+    double area = 0.01;     //this is the area of the button and it's set to be 10-sqcm by default
     
     public Engine(){
         
     }
+
+    public Engine(String materialCont, double volCont, double thicCont, String typeLiq, double volLiq, double vapTime, double liquidInitialTemp) {
+        this.materialCont = materialCont;
+        this.volCont = volCont;
+        this.thicCont = thicCont;
+        this.typeLiq = typeLiq;
+        this.volLiq = volLiq;
+        this.vapTime = vapTime;
+        this.liquidInitialTemp = liquidInitialTemp;
+    }
+    
+    
 
     public String getMaterialCont() {
         return materialCont;
@@ -82,7 +94,7 @@ public class Engine {
     }
     
     public double calcBoilTime(){       //this gives you the amount of time it takes to boil the liuqid
-        heatTransferRate = (transferConstant * area * (fireTemp - liquidInitialTemp))/thicCont;
+        calcHeatTransferRate();
         
         double boilTime = (liquidSpecificHeat * liquidMass * (liquidBoilPoint - liquidInitialTemp))/heatTransferRate;
         return boilTime;
