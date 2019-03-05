@@ -20,7 +20,7 @@ import javafx.scene.control.TextField;
  * @author zoewong
  */
 public class FXMLDocumentController implements Initializable {
-    
+
     @FXML
     private ComboBox materialContList;
     private Slider volContSlider;
@@ -35,33 +35,28 @@ public class FXMLDocumentController implements Initializable {
     private Label vMaxLabel;
     private Label accelerationLabel;
     private Label movTimeLabel;
-    
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
+
+        Engine engine = new Engine("stainless-steel", 20, 0.02, "water", 1, "stove");       //testing values
+
+        for (double i = 0; i < 60; i+=0.1) {
+            System.out.println("TIME IS : " + i);
+            engine.calcMoles();
+            System.out.println("moles: " + engine.liquidMoles);
+            System.out.println("time to vaporize: " + engine.calcVapTime());
+            System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
+            System.out.println("the heat transfer rate is: " + engine.calcHeatTransferRate() + " J/s , the temperature is: " + engine.calcTempInCont(0.1*engine.calcHeatTransferRate()) + " after " + i + " second");     //test end
+            System.out.println("the power of this engine is: " + engine.calcPower() + "Watt");
+        }
         
-        Engine engine = new Engine();       //testing values
-        engine.transferConstant = 14.4;      //home pot are normally stainless steel #304, so this is the value for it
-        engine.fireTemp = 230;              //the temperatur of home stove
-        engine.tempLiquid = 20;
-        engine.liquidInitialTemp = 20;
-        engine.thicCont = 0.01;
-        engine.liquidBoilPoint = 100;
-        engine.volCont = 2;
-        engine.typeLiq = "water";
-        engine.liquidMass = 1; //1 L of water
-        engine.deriveliquidInfo();
-        engine.calcMoles();
-        System.out.println("moles: " + engine.liquidMoles);
-        
-        System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
-        System.out.println(engine.calcHeatTransferRate() + " J/s , the temperature is: " + engine.calcTempInCont(110*engine.calcHeatTransferRate()) + " after one second");     //test end
-        System.out.println("the power of this engine is: " + engine.calcPower() + "Watt");
+        //end of thes values
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
 }
