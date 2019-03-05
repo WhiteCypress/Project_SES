@@ -5,15 +5,21 @@
  */
 package ses;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  *
@@ -37,8 +43,12 @@ public class FXMLDocumentController implements Initializable {
     private Label movTimeLabel;
     
     @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
+    private void handleButtonAction(ActionEvent event) throws IOException {
+        Parent gameParent = FXMLLoader.load(getClass().getResource("FXMLTrain.fxml"));
+        Scene gameScene = new Scene(gameParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gameScene);
+        window.show();
         
         Engine engine = new Engine();       //testing values
         engine.transferConstant = 14.4;      //home pot are normally stainless steel #304, so this is the value for it
