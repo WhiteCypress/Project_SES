@@ -145,7 +145,7 @@ public class Engine {
             case "cobalt": transferConstant = 122;
                 break;
                 
-            case "cold": transferConstant = 327;
+            case "gold": transferConstant = 327;
                 break;
                 
             case "hafnium": transferConstant = 24.4;

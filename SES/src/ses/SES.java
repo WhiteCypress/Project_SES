@@ -35,7 +35,6 @@ public class SES extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-        Train t = new Train();
     }
     
 }

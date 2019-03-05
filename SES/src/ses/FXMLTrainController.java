@@ -7,7 +7,12 @@ package ses;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 
 /**
  * FXML Controller class
@@ -16,12 +21,33 @@ import javafx.fxml.Initializable;
  */
 public class FXMLTrainController implements Initializable {
 
+    @FXML
+    private Slider massTrainSlider;
+    @FXML
+    private Slider runTimeSlider;
+    @FXML
+    private TextField angleText;
+    @FXML
+    private Label distanceFlatLabel;
+    @FXML
+    private Label vMaxFlatLabel;
+    @FXML
+    private Label accelerationFlatLabel;
+    @FXML
+    private Label distanceRampLabel;
+    @FXML
+    private Label heightRampLabel;
+    @FXML
+    private Label speedRampLabel;
+    @FXML
+    private Button startTrainButton;
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
 }
