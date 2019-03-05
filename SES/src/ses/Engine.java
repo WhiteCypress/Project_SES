@@ -160,9 +160,10 @@ public class Engine {
             case "cobalt":
                 transferConstant = 122;
                 break;
-
+            
             case "gold":
                 transferConstant = 327;
+
                 break;
 
             case "hafnium":
