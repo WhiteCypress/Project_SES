@@ -43,15 +43,20 @@ public class FXMLDocumentController implements Initializable {
         Engine engine = new Engine();       //testing values
         engine.transferConstant = 14.4;      //home pot are normally stainless steel #304, so this is the value for it
         engine.fireTemp = 230;              //the temperatur of home stove
+        engine.tempLiquid = 20;
         engine.liquidInitialTemp = 20;
         engine.thicCont = 0.01;
         engine.liquidBoilPoint = 100;
-        
-        engine.liquidMass = 1; //15 L of water
-        engine.liquidSpecificHeat = 4.186*1000;
+        engine.volCont = 2;
+        engine.typeLiq = "water";
+        engine.liquidMass = 1; //1 L of water
+        engine.deriveliquidInfo();
+        engine.calcMoles();
+        System.out.println("moles: " + engine.liquidMoles);
         
         System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
-        System.out.println(engine.calcHeatTransferRate() + " J/s , the change in temperature is: " + engine.calcTempInContChange(engine.calcHeatTransferRate()) + " kelvin every second");     //test end
+        System.out.println(engine.calcHeatTransferRate() + " J/s , the temperature is: " + engine.calcTempInCont(110*engine.calcHeatTransferRate()) + " after one second");     //test end
+        System.out.println("the power of this engine is: " + engine.calcPower() + "Watt");
     }
     
     @Override

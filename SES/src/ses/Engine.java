@@ -19,16 +19,19 @@ public class Engine {
     String materialComb;
     double liquidMass;
     
-    double fireTemp;    //all these are derived values
+    double fireTemp;    //all these are derived values              all values from here to latentVapHeat come from www.engineeringtoolbox.com
     double transferConstant;
     double liquidBoilPoint;
     double liquidSpecificHeat;
     double liquidDensity;           //this is in kg/L
     double latentVapHeat;
-    double energy;
-    double vapTime;
+    double liquidMolarMass;
     
     double heatTransferRate;   //all these are calculated values that will be reused
+    double power;
+    double vapTime;
+    double liquidMoles;
+    double tempLiquid;
     
     double area = 0.01;     //this is the area of the button and it's set to be 10-sqcm by default
     
@@ -44,6 +47,7 @@ public class Engine {
         this.volLiq = volLiq;           
         this.vapTime = vapTime;
         this.liquidInitialTemp = liquidInitialTemp;
+        tempLiquid = liquidInitialTemp;
         this.materialComb = materialComb;
         this.liquidMass = liquidMass;
     }
@@ -173,32 +177,48 @@ public class Engine {
                 liquidBoilPoint = 100;
                 liquidSpecificHeat = 4.19*1000;         //everything here is in J, L
                 latentVapHeat = 2256*1000;
+                liquidDensity = 1000/1000;
+                liquidMolarMass = 18.01528/1000;     
                 break;  
                 
             case "alcohol": 
                 liquidBoilPoint = 78.37;
                 liquidSpecificHeat = 2.3*1000;         //everything here is in J, L
                 latentVapHeat = 846*1000;
+                liquidDensity = 785.1/1000;
+                liquidMolarMass = 46.07/1000;  
                 break;  
                 
             case "ether": 
                 liquidBoilPoint = 34.6;
                 liquidSpecificHeat = 2.21*1000;         //everything here is in J, L
                 latentVapHeat = 377*1000;
+                liquidDensity = 713.5/1000;
+                liquidMolarMass = 74.12/1000; 
                 break;  
                 
             case "hexane": 
                 liquidBoilPoint = 68;
                 liquidSpecificHeat = 2.26*1000;         //everything here is in J, L
                 latentVapHeat = 365*1000;
+                liquidDensity = 654.8/1000;
+                liquidMolarMass = 86.18/1000; 
                 break;  
                 
-            case "water": 
-                liquidBoilPoint = 100;
-                liquidSpecificHeat = 4.19*1000;         //everything here is in J, L
-                latentVapHeat = 2256*1000;
+            case "gasoline": 
+                liquidBoilPoint = 35;
+                liquidSpecificHeat = 2.22*1000;         //everything here is in J, L
+                latentVapHeat = 2093.4*1000;
+                liquidDensity = 711/1000;
+                liquidMolarMass = 114.232/1000; 
                 break;  
         }
+    }
+    
+    public double calcMoles(){
+        liquidMoles = liquidMass/liquidMolarMass;
+        
+        return liquidMoles;
     }
     
     public double calcVapTime() {       //will return how long it takes to vaporize all liquid in container
@@ -219,18 +239,19 @@ public class Engine {
         return heatTransferRate;
     }
     
-    public double calcTempInContChange(double energyTranfered){       //energyTranfered is calcualted from heatTransferRate*timePast,
+    public double calcTempInCont(double energyTranfered){       //energyTranfered is calcualted from heatTransferRate*timePast,
                                                                         //so, heatTransferRate is in [J/s], heatTransferRate*time = [J] and that will
                                                                         //be the final temperature of the liquid after a given time.
         double tempChangeInCont = (energyTranfered)/(liquidMass*liquidSpecificHeat);//it should be calculated each frame
+        tempLiquid = tempLiquid + tempChangeInCont;
         
-        return tempChangeInCont;            //maybe i should add it automatically, also this is kinda similar to calcBoilTime()
+        return tempLiquid;            //maybe i should add it automatically, also this is kinda similar to calcBoilTime()
     }
 
-    public double calcEnergy() {
-        energy = 0;                              //This is not what it is
+    public double calcPower() {
+        power = (liquidMoles*8.3144598*tempLiquid/volCont)/liquidDensity*liquidMass;                              //This is not what it is
         
-        return energy;
+        return power;
     }
     
 }
