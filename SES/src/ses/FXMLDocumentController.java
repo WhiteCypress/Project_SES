@@ -34,7 +34,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ComboBox materialContList;
     @FXML
-    private Slider volContSlider;    
+    private Slider volContSlider;
     @FXML
     private Slider thicContSlider;
     @FXML
@@ -44,22 +44,26 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ComboBox materialCombList;
     @FXML
-
-    private Label vapTimeLabel;    
+    private Label vapTimeLabel;
     @FXML
     private Label enginePowerLabel;
     @FXML
-    private Button startEngine;    
+    private Button startEngine;
     @FXML
     private Button launchTrain;
 
     @FXML
+    private void launchTrainButtonAction(ActionEvent event) throws IOException {
+        Parent gameParent = FXMLLoader.load(getClass().getResource("FXMLTrain.fxml"));
+        Scene gameScene = new Scene(gameParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gameScene);
+        window.show();
+    }
+
+    @FXML
     private void startEngineButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
-
-
-    private void handleButtonAction(ActionEvent event) throws IOException {
-        
 
         Engine engine = new Engine();       //testing values
         engine.transferConstant = 14.4;      //home pot are normally stainless steel #304, so this is the value for it
@@ -69,10 +73,8 @@ public class FXMLDocumentController implements Initializable {
         engine.thicCont = 0.01;
         engine.liquidBoilPoint = 100;
 
-
         engine.liquidMass = 1; //15 L of water
         engine.liquidSpecificHeat = 4.186 * 1000;
-
 
         engine.volCont = 2;
         engine.typeLiq = "water";
@@ -80,18 +82,23 @@ public class FXMLDocumentController implements Initializable {
         engine.deriveliquidInfo();
         engine.calcMoles();
         System.out.println("moles: " + engine.liquidMoles);
-        
 
         System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
-        System.out.println(engine.calcHeatTransferRate() + " J/s , the temperature is: " + engine.calcTempInCont(110*engine.calcHeatTransferRate()) + " after one second");     //test end
+        System.out.println(engine.calcHeatTransferRate() + " J/s , the temperature is: " + engine.calcTempInCont(110 * engine.calcHeatTransferRate()) + " after one second");     //test end
         System.out.println("the power of this engine is: " + engine.calcPower() + "Watt");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        materialContList = new ComboBox();
-        materialContList.getItems().addAll("elements");
-    
+        materialContList.getItems().addAll("copper", "aluminium", "beryllium",
+                "boron", "cadmium", "cesium", "chromium", "cobalt", "gold", "hafnium",
+                "iridium", "iron", "lead", "nickel", "platinum", "stainless-steel");
+        
+        typeLiqList.getItems().addAll("water","alcohol","ether","hexane","gasoline");
+
+        materialCombList.getItems().addAll("stove", "natural gas", "methane",
+                "hydrogen", "carbon monoxide", "wood", "charcoal");
+
     }
 
 }
