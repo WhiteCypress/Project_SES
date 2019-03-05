@@ -7,6 +7,7 @@ package ses;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -42,9 +43,15 @@ public class FXMLTrainController implements Initializable {
     @FXML
     private Button startTrainButton;
 
-    /**
-     * Initializes the controller class.
-     */
+    @FXML
+    private void startTrainButtonAction(ActionEvent event) {
+        double massTrain = massTrainSlider.getValue();
+        double angle = Double.parseDouble(angleText.getText());
+        //double energy = 
+        //Train train = new Train(massTrain,,angle);
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
