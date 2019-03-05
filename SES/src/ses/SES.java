@@ -22,8 +22,11 @@ public class SES extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLEngine.fxml"));
         
         Scene scene = new Scene(root);
+
+        scene.getRoot().requestFocus();
         
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

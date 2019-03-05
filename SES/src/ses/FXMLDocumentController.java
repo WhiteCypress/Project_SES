@@ -5,16 +5,25 @@
  */
 package ses;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+
 import javafx.scene.control.Button;
+
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 /**
  *
@@ -35,6 +44,7 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private ComboBox materialCombList;
     @FXML
+
     private Label vapTimeLabel;    
     @FXML
     private Label enginePowerLabel;
@@ -47,18 +57,34 @@ public class FXMLDocumentController implements Initializable {
     private void startEngineButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
 
+
+    private void handleButtonAction(ActionEvent event) throws IOException {
+        
+
         Engine engine = new Engine();       //testing values
         engine.transferConstant = 14.4;      //home pot are normally stainless steel #304, so this is the value for it
         engine.fireTemp = 230;              //the temperatur of home stove
+        engine.tempLiquid = 20;
         engine.liquidInitialTemp = 20;
         engine.thicCont = 0.01;
         engine.liquidBoilPoint = 100;
 
+
         engine.liquidMass = 1; //15 L of water
         engine.liquidSpecificHeat = 4.186 * 1000;
 
+
+        engine.volCont = 2;
+        engine.typeLiq = "water";
+        engine.liquidMass = 1; //1 L of water
+        engine.deriveliquidInfo();
+        engine.calcMoles();
+        System.out.println("moles: " + engine.liquidMoles);
+        
+
         System.out.println("the time it takes to boil is: " + engine.calcBoilTime() + " seconds");
-        System.out.println(engine.calcHeatTransferRate() + " J/s , the change in temperature is: " + engine.calcTempInContChange(engine.calcHeatTransferRate()) + " kelvin");     //test end
+        System.out.println(engine.calcHeatTransferRate() + " J/s , the temperature is: " + engine.calcTempInCont(110*engine.calcHeatTransferRate()) + " after one second");     //test end
+        System.out.println("the power of this engine is: " + engine.calcPower() + "Watt");
     }
 
     @Override
