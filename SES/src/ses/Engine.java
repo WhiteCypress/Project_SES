@@ -101,15 +101,15 @@ public class Engine {
                 fireTemp = 230;
                 break;
 
-            case "natrual gas":
+            case "natural gas":
                 fireTemp = 1960;
                 break;
 
-            case "metane":
+            case "methane":
                 fireTemp = 1950;
                 break;
 
-            case "hydrogene":
+            case "hydrogen":
                 fireTemp = 2210;
                 break;
 
