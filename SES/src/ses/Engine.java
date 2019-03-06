@@ -52,8 +52,6 @@ public class Engine {
         this.liquidMass = liquidMass;
     }
     
-    
-
     public String getMaterialCont() {
         return materialCont;
     }
