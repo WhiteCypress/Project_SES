@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 
 /**
  * FXML Controller class
@@ -22,6 +23,8 @@ import javafx.scene.control.TextField;
  */
 public class FXMLTrainController implements Initializable {
 
+    @FXML
+    AnchorPane pane;
     @FXML
     private Slider massTrainSlider;
     @FXML
@@ -54,7 +57,7 @@ public class FXMLTrainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        pane.setBackground(AssetManager.getTrainTrack());
     }
 
 }
