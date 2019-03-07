@@ -69,7 +69,7 @@ public class FXMLTrainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         pane.setBackground(AssetManager.getTrainTrack());
 
-        massTrainSlider.setMin(0);
+       /* massTrainSlider.setMin(0);
         massTrainSlider.setMax(0);
         massTrainSlider.setValue(0);
         massTrainSlider.setShowTickLabels(true);
@@ -85,7 +85,7 @@ public class FXMLTrainController implements Initializable {
         runTimeSlider.setShowTickMarks(true);
         runTimeSlider.setMajorTickUnit(0);
         runTimeSlider.setMinorTickCount(0);
-        runTimeSlider.setBlockIncrement(0);
+        runTimeSlider.setBlockIncrement(0);*/
     }
 
 }
