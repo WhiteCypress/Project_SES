@@ -23,14 +23,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
  *
  * @author zoewong
  */
-public class FXMLDocumentController implements Initializable {
+public class FXMLEngineController implements Initializable {
 
+    @FXML
+    AnchorPane pane;
     @FXML
     private ComboBox materialContList;
     @FXML
@@ -45,15 +48,6 @@ public class FXMLDocumentController implements Initializable {
     private ComboBox materialCombList;
     @FXML
     private Label vapTimeLabel;
-
-    private Slider massTrain;
-    private Slider runTime;
-    private TextField angleText;
-    private Label distanceNetLabel;
-    private Label vMaxLabel;
-    private Label accelerationLabel;
-    private Label movTimeLabel;
-
     @FXML
     private Label enginePowerLabel;
     @FXML
@@ -73,20 +67,43 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void startEngineButtonAction(ActionEvent event) {
 
+        Engine engine = new Engine();
+
+        double inputVolLiq = Double.parseDouble(volLiqText.getText());
+        vapTimeLabel.setText(engine.calcVapTime() + " s");
+        enginePowerLabel.setText(engine.calcPower() + " W");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        pane.setBackground(AssetManager.getTrainTrack());
 
         materialContList.getItems().addAll("copper", "aluminium", "beryllium",
                 "boron", "cadmium", "cesium", "chromium", "cobalt", "gold", "hafnium",
                 "iridium", "iron", "lead", "nickel", "platinum", "stainless-steel");
-        
-        typeLiqList.getItems().addAll("water","alcohol","ether","hexane","gasoline");
+
+        typeLiqList.getItems().addAll("water", "alcohol", "ether", "hexane", "gasoline");
 
         materialCombList.getItems().addAll("stove", "natural gas", "methane",
                 "hydrogen", "carbon monoxide", "wood", "charcoal");
 
+        volContSlider.setMin(0);
+        volContSlider.setMax(0);
+        volContSlider.setValue(0);
+        volContSlider.setShowTickLabels(true);
+        volContSlider.setShowTickMarks(true);
+        volContSlider.setMajorTickUnit(0);
+        volContSlider.setMinorTickCount(0);
+        volContSlider.setBlockIncrement(0);
+
+        thicContSlider.setMin(0);
+        thicContSlider.setMax(0);
+        thicContSlider.setValue(0);
+        thicContSlider.setShowTickLabels(true);
+        thicContSlider.setShowTickMarks(true);
+        thicContSlider.setMajorTickUnit(0);
+        thicContSlider.setMinorTickCount(0);
+        thicContSlider.setBlockIncrement(0);
     }
 
 }

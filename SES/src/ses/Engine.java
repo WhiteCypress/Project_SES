@@ -56,7 +56,7 @@ public class Engine {
         deriveFireTemp();
         deriveTransferConstant();
     }
-
+  
     public String getMaterialCont() {
         return materialCont;
     }
