@@ -46,7 +46,7 @@ public class Train {
         return distanceFlat;
     }
 
-    public double calculateAccerlationFlat(double vMaxFlat, double distanceFlat) {
+    public double calculateAccerlationFlat() {
         accelerationFlat = (Math.pow(vMaxFlat, 2)) / (2 * distanceFlat);
 
         return accelerationFlat;
@@ -61,12 +61,12 @@ public class Train {
         return distanceOnRamp;
     }
 
-    /*public double calculateDistanceAngle() {
-        distanceNetAngle = distanceOnRamp * 2 + vMaxFlat * movTime;
-        
-        return distanceNetAngle;
-    }*/
-    public double calculateVelocityAngle(double vMaxFlat, double time) {
+    public double calculateHeightOnRamp(){
+        distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
+
+        return distanceY;
+    }
+    public double calculateVelocityAngle(double time) {
         vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
 
         return vAngle;
