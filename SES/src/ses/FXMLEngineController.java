@@ -35,7 +35,7 @@ public class FXMLEngineController implements Initializable {
     @FXML
     AnchorPane pane;
     @FXML
-    private ComboBox materialContList;
+    private ComboBox<String> materialContList;
     @FXML
     private Slider volContSlider;
     @FXML
@@ -43,13 +43,14 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Slider thicContSlider;
     @FXML
+
+    private ComboBox<String> typeLiqList;
+
     private Label thicContLabel;
-    @FXML
-    private ComboBox typeLiqList;
     @FXML
     private TextField volLiqText;
     @FXML
-    private ComboBox materialCombList;
+    private ComboBox<String> materialCombList;
     @FXML
     private Label vapTimeLabel;
     @FXML
@@ -70,10 +71,15 @@ public class FXMLEngineController implements Initializable {
 
     @FXML
     private void startEngineButtonAction(ActionEvent event) {
-
-        Engine engine = new Engine();
-
+        String inputMaterialCont = materialContList.getValue();
+        double inputVolCont = volContSlider.getValue();
+        double inuputThicCont = thicContSlider.getValue();
+        String inputTypeLiq = typeLiqList.getValue();
         double inputVolLiq = Double.parseDouble(volLiqText.getText());
+        String inputMaterialConb = materialCombList.getValue();
+        
+        Engine engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
+ 
         vapTimeLabel.setText(engine.calcVapTime() + " s");
         enginePowerLabel.setText(engine.calcPower() + " W");
     }
@@ -90,7 +96,7 @@ public class FXMLEngineController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        pane.setBackground(AssetManager.getTrainTrack());
+//        pane.setBackground(AssetManager.getTrainTrack());
 
         materialContList.getItems().addAll("copper", "aluminium", "beryllium",
                 "boron", "cadmium", "cesium", "chromium", "cobalt", "gold", "hafnium",
@@ -118,7 +124,6 @@ public class FXMLEngineController implements Initializable {
         thicContSlider.setMajorTickUnit(0.015);
         thicContSlider.setMinorTickCount(1);
         thicContSlider.setBlockIncrement(0.01);
-
     }
 
 }
