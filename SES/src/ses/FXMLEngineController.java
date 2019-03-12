@@ -39,9 +39,14 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Slider volContSlider;
     @FXML
+    private Label volContLabel;
+    @FXML
     private Slider thicContSlider;
     @FXML
+
     private ComboBox<String> typeLiqList;
+
+    private Label thicContLabel;
     @FXML
     private TextField volLiqText;
     @FXML
@@ -79,6 +84,16 @@ public class FXMLEngineController implements Initializable {
         enginePowerLabel.setText(engine.calcPower() + " W");
     }
 
+    @FXML
+    private void getVolContSliderValue() {
+        volContLabel.setText(volContSlider.getValue() + " L");
+    }
+
+    @FXML
+    private void getThicContSliderValue() {
+        thicContLabel.setText(thicContSlider.getValue() + " m");
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        pane.setBackground(AssetManager.getTrainTrack());
@@ -92,23 +107,23 @@ public class FXMLEngineController implements Initializable {
         materialCombList.getItems().addAll("stove", "natural gas", "methane",
                 "hydrogen", "carbon monoxide", "wood", "charcoal");
 
-//        volContSlider.setMin(0);
-//        volContSlider.setMax(0);
-//        volContSlider.setValue(0);
-//        volContSlider.setShowTickLabels(true);
-//        volContSlider.setShowTickMarks(true);
-//        volContSlider.setMajorTickUnit(1);
-//        volContSlider.setMinorTickCount(0);
-//        volContSlider.setBlockIncrement(0);
-//
-//        thicContSlider.setMin(0);
-//        thicContSlider.setMax(0);
-//        thicContSlider.setValue(0);
-//        thicContSlider.setShowTickLabels(true);
-//        thicContSlider.setShowTickMarks(true);
-//        thicContSlider.setMajorTickUnit(1);
-//        thicContSlider.setMinorTickCount(0);
-//        thicContSlider.setBlockIncrement(0);
+        volContSlider.setMin(5);
+        volContSlider.setMax(500);
+        volContSlider.setValue(250);
+        volContSlider.setShowTickLabels(true);
+        volContSlider.setShowTickMarks(true);
+        volContSlider.setMajorTickUnit(50);
+        volContSlider.setMinorTickCount(25);
+        volContSlider.setBlockIncrement(10);
+
+        thicContSlider.setMin(0.01);
+        thicContSlider.setMax(0.1);
+        thicContSlider.setValue(0.05);
+        thicContSlider.setShowTickLabels(true);
+        thicContSlider.setShowTickMarks(true);
+        thicContSlider.setMajorTickUnit(0.015);
+        thicContSlider.setMinorTickCount(1);
+        thicContSlider.setBlockIncrement(0.01);
     }
 
 }
