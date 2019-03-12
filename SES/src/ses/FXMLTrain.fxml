@@ -30,6 +30,6 @@
       <Label layoutX="392.0" layoutY="458.0" text="Current speed on ramp:" />
       <Label fx:id="speedRampLabel" layoutX="547.0" layoutY="458.0" prefHeight="17.0" prefWidth="93.0" />
       <Label fx:id="massTrainLabel" alignment="CENTER_RIGHT" layoutX="520.0" layoutY="102.0" onDragDetected="#getMassTrainSliderValue" prefHeight="17.0" prefWidth="182.0" text="kg" />
-      <Label fx:id="runTimeLabel" alignment="CENTER_RIGHT" layoutX="520.0" layoutY="208.0" onDragDetected="#getRunTimeSliderValue" prefHeight="17.0" prefWidth="182.0" text="mins" />
+      <Label fx:id="runTimeLabel" alignment="CENTER_RIGHT" layoutX="520.0" layoutY="208.0" onDragDetected="#getRunTimeSliderValue" prefHeight="17.0" prefWidth="182.0" text="sec" />
    </children>
 </AnchorPane>

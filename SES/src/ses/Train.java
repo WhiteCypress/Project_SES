@@ -19,7 +19,6 @@ public class Train {
     private double distanceFlat;
     private double distanceX;
     private double distanceY;
-    //private double distanceNetAngle;
     private double distanceOnRamp;
     private double timeTravelledOnRamp;
     private double accelerationFlat;
@@ -28,17 +27,17 @@ public class Train {
     private double vMaxFlat;
     private double trainCurrentVelocity;
     private double power;
-    
+
     double maxFLatTime;
-    
+
     public Train(double massTrain, double power, double angle, double maxFlatTime) {
         this.massTrain = massTrain;
         this.power = power;
         this.angle = angle;
         this.maxFLatTime = maxFlatTime;
     }
-    
-    public void setMovTime(double movTime){
+
+    public void setMovTime(double movTime) {
         this.movTime = movTime;
     }
 
@@ -49,7 +48,7 @@ public class Train {
     }
 
     public double calculateDistanceFlat() {
-        distanceFlat = vMaxFlat/2 * movTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
+        distanceFlat = vMaxFlat / 2 * movTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
 
         return distanceFlat;
     }
@@ -62,7 +61,7 @@ public class Train {
 
     public double calculateDistanceOnRamp() {
         //distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
-        distanceY = vMaxFlat * Math.sin(angle)*(movTime-maxFLatTime)+ 0.5*(-9.8)*(movTime-maxFLatTime)*(movTime-maxFLatTime);
+        distanceY = vMaxFlat * Math.sin(angle) * (movTime - maxFLatTime) + 0.5 * (-9.8) * (movTime - maxFLatTime) * (movTime - maxFLatTime);
         timeTravelledOnRamp = (vMaxFlat * Math.sin(angle)) / 9.81;
         distanceX = vMaxFlat * Math.cos(angle) * timeTravelledOnRamp;
         distanceOnRamp = Math.sqrt((Math.pow(distanceX, 2)) + (Math.pow(distanceY, 2)));
@@ -70,11 +69,12 @@ public class Train {
         return distanceOnRamp;
     }
 
-    public double calculateHeightOnRamp(){
+    public double calculateHeightOnRamp() {
         distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
 
         return distanceY;
     }
+
     public double calculateVelocityAngle(double time) {
         vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
 

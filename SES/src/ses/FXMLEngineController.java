@@ -8,6 +8,8 @@ package ses;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,9 +45,8 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Slider thicContSlider;
     @FXML
-
     private ComboBox<String> typeLiqList;
-
+    @FXML
     private Label thicContLabel;
     @FXML
     private TextField volLiqText;
@@ -59,6 +60,8 @@ public class FXMLEngineController implements Initializable {
     private Button startEngine;
     @FXML
     private Button launchTrain;
+
+    public static Engine engine;
 
     @FXML
     private void launchTrainButtonAction(ActionEvent event) throws IOException {
@@ -77,9 +80,9 @@ public class FXMLEngineController implements Initializable {
         String inputTypeLiq = typeLiqList.getValue();
         double inputVolLiq = Double.parseDouble(volLiqText.getText());
         String inputMaterialConb = materialCombList.getValue();
-        
-        Engine engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
- 
+
+        engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
+
         vapTimeLabel.setText(engine.calcVapTime() + " s");
         enginePowerLabel.setText(engine.calcPower() + " W");
     }
@@ -116,6 +119,13 @@ public class FXMLEngineController implements Initializable {
         volContSlider.setMinorTickCount(25);
         volContSlider.setBlockIncrement(10);
 
+        volContSlider.valueProperty().addListener(new ChangeListener() {
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                volContLabel.setText(
+                        String.valueOf((int) volContSlider.getValue() + " L"));
+            }
+        });
+
         thicContSlider.setMin(0.01);
         thicContSlider.setMax(0.1);
         thicContSlider.setValue(0.05);
@@ -124,6 +134,13 @@ public class FXMLEngineController implements Initializable {
         thicContSlider.setMajorTickUnit(0.015);
         thicContSlider.setMinorTickCount(1);
         thicContSlider.setBlockIncrement(0.01);
+
+        thicContSlider.valueProperty().addListener(new ChangeListener() {
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                thicContLabel.setText(
+                        String.valueOf((double) thicContSlider.getValue() + " m"));
+            }
+        });
     }
 
 }
