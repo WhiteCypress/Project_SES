@@ -37,6 +37,8 @@ public class Engine {
 
     double area = 0.01;     //this is the area of the button and it's set to be 50-sqcm by default
 
+    final double SIConvertion = 1000;
+    
     public Engine() {
 
     }
@@ -200,42 +202,42 @@ public class Engine {
         switch (typeLiq) {
             case "water":
                 liquidBoilPoint = 100;
-                liquidSpecificHeat = 4.19 * 1000;         //everything here is in J, L
-                latentVapHeat = 2256 * 1000;
-                liquidDensity = 1000 / 1000;
-                liquidMolarMass = 18.01528 / 1000;
+                liquidSpecificHeat = 4.19 * SIConvertion;         //everything here is in J, L
+                latentVapHeat = 2256 * SIConvertion;
+                liquidDensity = 1000 / SIConvertion;
+                liquidMolarMass = 18.01528 / SIConvertion;
                 break;
 
             case "alcohol":
                 liquidBoilPoint = 78.37;
-                liquidSpecificHeat = 2.3 * 1000;         //everything here is in J, L
-                latentVapHeat = 846 * 1000;
-                liquidDensity = 785.1 / 1000;
-                liquidMolarMass = 46.07 / 1000;
+                liquidSpecificHeat = 2.3 * SIConvertion;         //everything here is in J, L
+                latentVapHeat = 846 * SIConvertion;
+                liquidDensity = 785.1 / SIConvertion;
+                liquidMolarMass = 46.07 / SIConvertion;
                 break;
 
             case "ether":
                 liquidBoilPoint = 34.6;
-                liquidSpecificHeat = 2.21 * 1000;         //everything here is in J, L
-                latentVapHeat = 377 * 1000;
-                liquidDensity = 713.5 / 1000;
-                liquidMolarMass = 74.12 / 1000;
+                liquidSpecificHeat = 2.21 * SIConvertion;         //everything here is in J, L
+                latentVapHeat = 377 * SIConvertion;
+                liquidDensity = 713.5 / SIConvertion;
+                liquidMolarMass = 74.12 / SIConvertion;
                 break;
 
             case "hexane":
                 liquidBoilPoint = 68;
-                liquidSpecificHeat = 2.26 * 1000;         //everything here is in J, L
-                latentVapHeat = 365 * 1000;
-                liquidDensity = 654.8 / 1000;
-                liquidMolarMass = 86.18 / 1000;
+                liquidSpecificHeat = 2.26 * SIConvertion;         //everything here is in J, L
+                latentVapHeat = 365 * SIConvertion;
+                liquidDensity = 654.8 / SIConvertion;
+                liquidMolarMass = 86.18 / SIConvertion;
                 break;
 
             case "gasoline":
                 liquidBoilPoint = 35;
-                liquidSpecificHeat = 2.22 * 1000;         //everything here is in J, L
-                latentVapHeat = 2093.4 * 1000;
-                liquidDensity = 711 / 1000;
-                liquidMolarMass = 114.232 / 1000;
+                liquidSpecificHeat = 2.22 * SIConvertion;         //everything here is in J, L
+                latentVapHeat = 2093.4 * SIConvertion;
+                liquidDensity = 711 / SIConvertion;
+                liquidMolarMass = 114.232 / SIConvertion;
                 break;
         }
     }
