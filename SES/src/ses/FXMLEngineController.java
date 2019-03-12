@@ -35,17 +35,17 @@ public class FXMLEngineController implements Initializable {
     @FXML
     AnchorPane pane;
     @FXML
-    private ComboBox materialContList;
+    private ComboBox<String> materialContList;
     @FXML
     private Slider volContSlider;
     @FXML
     private Slider thicContSlider;
     @FXML
-    private ComboBox typeLiqList;
+    private ComboBox<String> typeLiqList;
     @FXML
     private TextField volLiqText;
     @FXML
-    private ComboBox materialCombList;
+    private ComboBox<String> materialCombList;
     @FXML
     private Label vapTimeLabel;
     @FXML
@@ -66,17 +66,22 @@ public class FXMLEngineController implements Initializable {
 
     @FXML
     private void startEngineButtonAction(ActionEvent event) {
-
-        Engine engine = new Engine();
-
+        String inputMaterialCont = materialContList.getValue();
+        double inputVolCont = volContSlider.getValue();
+        double inuputThicCont = thicContSlider.getValue();
+        String inputTypeLiq = typeLiqList.getValue();
         double inputVolLiq = Double.parseDouble(volLiqText.getText());
+        String inputMaterialConb = materialCombList.getValue();
+        
+        Engine engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
+ 
         vapTimeLabel.setText(engine.calcVapTime() + " s");
         enginePowerLabel.setText(engine.calcPower() + " W");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        pane.setBackground(AssetManager.getTrainTrack());
+//        pane.setBackground(AssetManager.getTrainTrack());
 
         materialContList.getItems().addAll("copper", "aluminium", "beryllium",
                 "boron", "cadmium", "cesium", "chromium", "cobalt", "gold", "hafnium",
@@ -87,23 +92,23 @@ public class FXMLEngineController implements Initializable {
         materialCombList.getItems().addAll("stove", "natural gas", "methane",
                 "hydrogen", "carbon monoxide", "wood", "charcoal");
 
-        volContSlider.setMin(0);
-        volContSlider.setMax(0);
-        volContSlider.setValue(0);
-        volContSlider.setShowTickLabels(true);
-        volContSlider.setShowTickMarks(true);
-        volContSlider.setMajorTickUnit(0);
-        volContSlider.setMinorTickCount(0);
-        volContSlider.setBlockIncrement(0);
-
-        thicContSlider.setMin(0);
-        thicContSlider.setMax(0);
-        thicContSlider.setValue(0);
-        thicContSlider.setShowTickLabels(true);
-        thicContSlider.setShowTickMarks(true);
-        thicContSlider.setMajorTickUnit(0);
-        thicContSlider.setMinorTickCount(0);
-        thicContSlider.setBlockIncrement(0);
+//        volContSlider.setMin(0);
+//        volContSlider.setMax(0);
+//        volContSlider.setValue(0);
+//        volContSlider.setShowTickLabels(true);
+//        volContSlider.setShowTickMarks(true);
+//        volContSlider.setMajorTickUnit(1);
+//        volContSlider.setMinorTickCount(0);
+//        volContSlider.setBlockIncrement(0);
+//
+//        thicContSlider.setMin(0);
+//        thicContSlider.setMax(0);
+//        thicContSlider.setValue(0);
+//        thicContSlider.setShowTickLabels(true);
+//        thicContSlider.setShowTickMarks(true);
+//        thicContSlider.setMajorTickUnit(1);
+//        thicContSlider.setMinorTickCount(0);
+//        thicContSlider.setBlockIncrement(0);
     }
 
 }

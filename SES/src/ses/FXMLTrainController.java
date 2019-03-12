@@ -55,10 +55,10 @@ public class FXMLTrainController implements Initializable {
         double runTime = runTimeSlider.getValue();
         double angle = Double.parseDouble(angleText.getText());
         double energy = engine.calcPower();
-        Train train = new Train(massTrain, energy, angle);
+        Train train = new Train(massTrain, energy, angle, 60);
 
         distanceFlatLabel.setText(train.calculateDistanceFlat() + " m");
-        vMaxFlatLabel.setText(train.calculateMaxVeloctiyFlat(energy) + " m/s");
+        vMaxFlatLabel.setText(train.calculateMaxVeloctiyFlat() + " m/s");
         accelerationFlatLabel.setText(train.calculateAccerlationFlat() + " m/s^2");
         distanceRampLabel.setText(train.calculateDistanceOnRamp() + " m");
         heightRampLabel.setText(train.calculateHeightOnRamp() + " m");

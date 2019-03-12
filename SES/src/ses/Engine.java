@@ -55,6 +55,10 @@ public class Engine {
         this.liquidMass = calcLiquidMass();
         deriveFireTemp();
         deriveTransferConstant();
+        
+        calcMoles();
+        calcLiquidMass();
+        calcHeatTransferRate();
     }
   
     public String getMaterialCont() {
