@@ -7,6 +7,7 @@ package ses;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,9 +27,13 @@ public class FXMLTrainController implements Initializable {
     @FXML
     AnchorPane pane;
     @FXML
-    private Slider massTrainSlider;
+    private Slider massTrainSlider;    
     @FXML
-    private Slider runTimeSlider;
+    private Label massTrainLabel;
+    @FXML
+    private Slider runTimeSlider;    
+    @FXML
+    private Label runTimeLabel;
     @FXML
     private TextField angleText;
     @FXML
@@ -55,37 +60,44 @@ public class FXMLTrainController implements Initializable {
         double runTime = runTimeSlider.getValue();
         double angle = Double.parseDouble(angleText.getText());
         double energy = engine.calcPower();
-        Train train = new Train(massTrain, energy, angle);
+        Train train = new Train(massTrain, energy, angle, 60);
 
         distanceFlatLabel.setText(train.calculateDistanceFlat() + " m");
-        vMaxFlatLabel.setText(train.calculateMaxVeloctiyFlat(energy) + " m/s");
+        vMaxFlatLabel.setText(train.calculateMaxVeloctiyFlat() + " m/s");
         accelerationFlatLabel.setText(train.calculateAccerlationFlat() + " m/s^2");
         distanceRampLabel.setText(train.calculateDistanceOnRamp() + " m");
         heightRampLabel.setText(train.calculateHeightOnRamp() + " m");
         speedRampLabel.setText(train.calculateVelocityAngle(runTime) + " m/s");
     }
 
+    @FXML
+    private void getMassTrainSliderValue() {
+        massTrainLabel.setText(massTrainSlider.getValue() + " kg");
+    }
+
+    @FXML
+    private void getRunTimeSliderValue() {
+        runTimeLabel.setText(runTimeSlider.getValue() + " mins");
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         pane.setBackground(AssetManager.getTrainTrack());
 
-       /* massTrainSlider.setMin(0);
-        massTrainSlider.setMax(0);
-        massTrainSlider.setValue(0);
+        massTrainSlider.setMin(100000);
+        massTrainSlider.setMax(10000000);
+        massTrainSlider.setValue(1000000);
         massTrainSlider.setShowTickLabels(true);
         massTrainSlider.setShowTickMarks(true);
-        massTrainSlider.setMajorTickUnit(0);
+        massTrainSlider.setMajorTickUnit(500000);
         massTrainSlider.setMinorTickCount(0);
-        massTrainSlider.setBlockIncrement(0);
 
         runTimeSlider.setMin(0);
-        runTimeSlider.setMax(0);
+        runTimeSlider.setMax(30);
         runTimeSlider.setValue(0);
         runTimeSlider.setShowTickLabels(true);
         runTimeSlider.setShowTickMarks(true);
-        runTimeSlider.setMajorTickUnit(0);
-        runTimeSlider.setMinorTickCount(0);
-        runTimeSlider.setBlockIncrement(0);*/
+        runTimeSlider.setMajorTickUnit(10);
+        runTimeSlider.setMinorTickCount(5);
     }
-
 }

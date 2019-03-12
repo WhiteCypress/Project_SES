@@ -27,21 +27,29 @@ public class Train {
     private double movTime;
     private double vMaxFlat;
     private double trainCurrentVelocity;
+    private double power;
     
-    public Train(double massTrain, double energy, double angle) {
+    double maxFLatTime;
+    
+    public Train(double massTrain, double power, double angle, double maxFlatTime) {
         this.massTrain = massTrain;
-        this.energy = energy;
+        this.power = power;
         this.angle = angle;
+        this.maxFLatTime = maxFlatTime;
+    }
+    
+    public void setMovTime(double movTime){
+        this.movTime = movTime;
     }
 
-    public double calculateMaxVeloctiyFlat(double power) {
+    public double calculateMaxVeloctiyFlat() {
         vMaxFlat = Math.abs(sqrt((2 * movTime * power) / massTrain));
 
         return vMaxFlat;
     }
 
     public double calculateDistanceFlat() {
-        distanceFlat = vMaxFlat * movTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
+        distanceFlat = vMaxFlat/2 * movTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
 
         return distanceFlat;
     }
@@ -53,7 +61,8 @@ public class Train {
     }
 
     public double calculateDistanceOnRamp() {
-        distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
+        //distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
+        distanceY = vMaxFlat * Math.sin(angle)*(movTime-maxFLatTime)+ 0.5*(-9.8)*(movTime-maxFLatTime)*(movTime-maxFLatTime);
         timeTravelledOnRamp = (vMaxFlat * Math.sin(angle)) / 9.81;
         distanceX = vMaxFlat * Math.cos(angle) * timeTravelledOnRamp;
         distanceOnRamp = Math.sqrt((Math.pow(distanceX, 2)) + (Math.pow(distanceY, 2)));
