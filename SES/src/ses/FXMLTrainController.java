@@ -6,6 +6,7 @@
 package ses;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -53,20 +54,22 @@ public class FXMLTrainController implements Initializable {
     @FXML
     private Button startTrainButton;
 
+    DecimalFormat formater = new DecimalFormat("###.##");
+    
     @FXML
-    private void startTrainButtonAction(ActionEvent event) {
+    private void startTrainButtonAction(ActionEvent event) {                  //calculate all the values right now, but these should be later relie on the time change
         Engine engine = FXMLEngineController.engine;
 
         double massTrain = massTrainSlider.getValue();
         double runTime = runTimeSlider.getValue();
         double angle = Double.parseDouble(angleText.getText());
         double power = engine.calcPower();
-        Train train = new Train(massTrain, power, angle, 60);
-        train.setMovTime(runTime);
+        Train train = new Train(massTrain, power, angle, runTime);
+        //train.setMovTime(runTime);
 
         //System.out.println(train.calculateDistanceFlat());
-        distanceFlatLabel.setText(train.calculateDistanceFlat() + " m");
         vMaxFlatLabel.setText(train.calculateMaxVeloctiyFlat() + " m/s");
+        distanceFlatLabel.setText(train.calculateDistanceFlat() + " m");
         accelerationFlatLabel.setText(train.calculateAccerlationFlat() + " m/s^2");
         distanceRampLabel.setText(train.calculateDistanceOnRamp() + " m");
         heightRampLabel.setText(train.calculateHeightOnRamp() + " m");
@@ -74,13 +77,13 @@ public class FXMLTrainController implements Initializable {
     }
 
     @FXML
-    private void getMassTrainSliderValue() {
-        massTrainLabel.setText(massTrainSlider.getValue() + " kg");
+    private void getMassTrainSliderValue() {                                    //display the values for mass train
+        massTrainLabel.setText(formater.format(massTrainSlider.getValue()) + " kg");
     }
 
     @FXML
-    private void getRunTimeSliderValue() {
-        runTimeLabel.setText(runTimeSlider.getValue() + " sec");
+    private void getRunTimeSliderValue() {                                      //display the values for mass train
+        runTimeLabel.setText(formater.format(runTimeSlider.getValue()) + " sec");
     }
 
     @Override
@@ -94,7 +97,10 @@ public class FXMLTrainController implements Initializable {
         massTrainSlider.setShowTickMarks(true);
         massTrainSlider.setMajorTickUnit(500000);
         massTrainSlider.setMinorTickCount(0);
-
+        
+        getMassTrainSliderValue();
+        getRunTimeSliderValue();
+        
         massTrainSlider.valueProperty().addListener(new ChangeListener() {
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 massTrainLabel.setText(
