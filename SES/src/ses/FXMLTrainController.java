@@ -8,6 +8,8 @@ package ses;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,11 +29,11 @@ public class FXMLTrainController implements Initializable {
     @FXML
     AnchorPane pane;
     @FXML
-    private Slider massTrainSlider;    
+    private Slider massTrainSlider;
     @FXML
     private Label massTrainLabel;
     @FXML
-    private Slider runTimeSlider;    
+    private Slider runTimeSlider;
     @FXML
     private Label runTimeLabel;
     @FXML
@@ -53,15 +55,16 @@ public class FXMLTrainController implements Initializable {
 
     @FXML
     private void startTrainButtonAction(ActionEvent event) {
-        Engine engine = new Engine();
+        Engine engine = FXMLEngineController.engine;
 
         double massTrain = massTrainSlider.getValue();
-
         double runTime = runTimeSlider.getValue();
         double angle = Double.parseDouble(angleText.getText());
-        double energy = engine.calcPower();
-        Train train = new Train(massTrain, energy, angle, 60);
+        double power = engine.calcPower();
+        Train train = new Train(massTrain, power, angle, 60);
+        train.setMovTime(runTime);
 
+        //System.out.println(train.calculateDistanceFlat());
         distanceFlatLabel.setText(train.calculateDistanceFlat() + " m");
         vMaxFlatLabel.setText(train.calculateMaxVeloctiyFlat() + " m/s");
         accelerationFlatLabel.setText(train.calculateAccerlationFlat() + " m/s^2");
@@ -77,27 +80,40 @@ public class FXMLTrainController implements Initializable {
 
     @FXML
     private void getRunTimeSliderValue() {
-        runTimeLabel.setText(runTimeSlider.getValue() + " mins");
+        runTimeLabel.setText(runTimeSlider.getValue() + " sec");
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         pane.setBackground(AssetManager.getTrainTrack());
 
         massTrainSlider.setMin(100000);
         massTrainSlider.setMax(10000000);
-        massTrainSlider.setValue(1000000);
+        massTrainSlider.setValue(100000);
         massTrainSlider.setShowTickLabels(true);
         massTrainSlider.setShowTickMarks(true);
         massTrainSlider.setMajorTickUnit(500000);
         massTrainSlider.setMinorTickCount(0);
 
+        massTrainSlider.valueProperty().addListener(new ChangeListener() {
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                massTrainLabel.setText(
+                        String.valueOf((int) massTrainSlider.getValue() + " kg"));
+            }
+        });
+
         runTimeSlider.setMin(0);
-        runTimeSlider.setMax(30);
+        runTimeSlider.setMax(90);
         runTimeSlider.setValue(0);
         runTimeSlider.setShowTickLabels(true);
         runTimeSlider.setShowTickMarks(true);
         runTimeSlider.setMajorTickUnit(10);
-        runTimeSlider.setMinorTickCount(5);
+
+        runTimeSlider.valueProperty().addListener(new ChangeListener() {
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                runTimeLabel.setText(
+                        String.valueOf((int) runTimeSlider.getValue() + " sec"));
+            }
+        });
     }
 }
