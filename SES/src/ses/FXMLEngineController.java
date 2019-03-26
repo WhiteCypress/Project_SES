@@ -7,7 +7,10 @@ package ses;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,9 +46,8 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Slider thicContSlider;
     @FXML
-
     private ComboBox<String> typeLiqList;
-
+    @FXML
     private Label thicContLabel;
     @FXML
     private TextField volLiqText;
@@ -60,8 +62,19 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Button launchTrain;
 
+    public static Engine engine;
+
+    String inputMaterialCont;
+    double inputVolCont = 250;
+    double inuputThicCont;
+    String inputTypeLiq;
+    double inputVolLiq;
+    String inputMaterialConb;
+
+    DecimalFormat formater = new DecimalFormat("###.##");
+
     @FXML
-    private void launchTrainButtonAction(ActionEvent event) throws IOException {
+    private void launchTrainButtonAction(ActionEvent event) throws IOException {                //creat a train window and replace this window with it
         Parent gameParent = FXMLLoader.load(getClass().getResource("FXMLTrain.fxml"));
         Scene gameScene = new Scene(gameParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -70,35 +83,43 @@ public class FXMLEngineController implements Initializable {
     }
 
     @FXML
-    private void startEngineButtonAction(ActionEvent event) {
-        String inputMaterialCont = materialContList.getValue();
-        double inputVolCont = volContSlider.getValue();
-        double inuputThicCont = thicContSlider.getValue();
-        String inputTypeLiq = typeLiqList.getValue();
-        double inputVolLiq = Double.parseDouble(volLiqText.getText());
-        String inputMaterialConb = materialCombList.getValue();
-        
-        Engine engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
- 
-        vapTimeLabel.setText(engine.calcVapTime() + " s");
-        enginePowerLabel.setText(engine.calcPower() + " W");
+    private void startEngineButtonAction(ActionEvent event) {                   //does all calculations and display them. Once the deltaTime works, link these values with the time
+        try {
+            inputMaterialCont = materialContList.getValue();
+            inputVolCont = volContSlider.getValue();
+            inuputThicCont = thicContSlider.getValue();
+            inputTypeLiq = typeLiqList.getValue();
+            inputVolLiq = Double.parseDouble(volLiqText.getText());
+            inputMaterialConb = materialCombList.getValue();
+        } catch (Exception e) {
+            vapTimeLabel.setText("Error! Please make sure your input is valid!");               //message label
+        }
+
+        engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
+
+        try {
+            vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
+            enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+        } catch (Exception e) {
+            vapTimeLabel.setText("Error! Calculation cannot precedd!");                     //message label
+        }
     }
 
     @FXML
-    private void getVolContSliderValue() {
+    private void getVolContSliderValue() {                                      //display the value of volCont
         volContLabel.setText(volContSlider.getValue() + " L");
     }
 
     @FXML
-    private void getThicContSliderValue() {
-        thicContLabel.setText(thicContSlider.getValue() + " m");
+    private void getThicContSliderValue() {                                     //display the value of thicCont
+        thicContLabel.setText(formater.format(thicContSlider.getValue()) + " m");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        pane.setBackground(AssetManager.getTrainTrack());
 
-        materialContList.getItems().addAll("copper", "aluminium", "beryllium",
+        materialContList.getItems().addAll("copper", "aluminium", "beryllium", //add values for the comboBox so we can refer to them later
                 "boron", "cadmium", "cesium", "chromium", "cobalt", "gold", "hafnium",
                 "iridium", "iron", "lead", "nickel", "platinum", "stainless-steel");
 
@@ -107,7 +128,7 @@ public class FXMLEngineController implements Initializable {
         materialCombList.getItems().addAll("stove", "natural gas", "methane",
                 "hydrogen", "carbon monoxide", "wood", "charcoal");
 
-        volContSlider.setMin(5);
+        volContSlider.setMin(5);                                                //set default values for the slider
         volContSlider.setMax(500);
         volContSlider.setValue(250);
         volContSlider.setShowTickLabels(true);
@@ -115,6 +136,17 @@ public class FXMLEngineController implements Initializable {
         volContSlider.setMajorTickUnit(50);
         volContSlider.setMinorTickCount(25);
         volContSlider.setBlockIncrement(10);
+
+        getVolContSliderValue();
+
+        volContSlider.valueProperty().addListener(new ChangeListener() {
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                volContLabel.setText(
+                        String.valueOf((int) volContSlider.getValue() + " L"));
+                                
+                inputVolCont = (int) volContSlider.getValue();
+            }
+        });
 
         thicContSlider.setMin(0.01);
         thicContSlider.setMax(0.1);
@@ -124,6 +156,29 @@ public class FXMLEngineController implements Initializable {
         thicContSlider.setMajorTickUnit(0.015);
         thicContSlider.setMinorTickCount(1);
         thicContSlider.setBlockIncrement(0.01);
+
+        getThicContSliderValue();
+
+        thicContSlider.valueProperty().addListener(new ChangeListener() {
+            public void changed(ObservableValue arg0, Object arg1, Object arg2) {
+                thicContLabel.setText(
+                        String.valueOf(formater.format((double) thicContSlider.getValue()) + " m"));
+            }
+        });
+
+        // force the field to be numeric only
+        volLiqText.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\.") && !newValue.matches("\\d*")) {
+                    volLiqText.setText(newValue.replaceAll("[^\\d\\.]", ""));
+                }
+                if(Double.parseDouble(newValue) > inputVolCont){
+                    volLiqText.setText(Double.toString(inputVolCont));
+                }
+            }
+        });
     }
 
 }
