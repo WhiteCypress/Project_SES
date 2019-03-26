@@ -33,7 +33,7 @@ public class Train {
     public Train(double massTrain, double power, double angle, double maxFlatTime) {
         this.massTrain = massTrain;
         this.power = power;
-        this.angle = angle;
+        this.angle = angle/360*2*3.1415926;
         this.maxFlatTime = maxFlatTime;
     }
 
@@ -61,10 +61,10 @@ public class Train {
 
     public double calculateDistanceOnRamp() {
         //distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
-        distanceY = vMaxFlat * Math.sin(angle) * (movTime - maxFlatTime) + 0.5 * (-9.8) * (movTime - maxFlatTime) * (movTime - maxFlatTime);
         timeTravelledOnRamp = (vMaxFlat * Math.sin(angle)) / 9.81;
-        distanceX = vMaxFlat * Math.cos(angle) * timeTravelledOnRamp;
-        distanceOnRamp = Math.sqrt((Math.pow(distanceX, 2)) + (Math.pow(distanceY, 2)));
+        distanceY = vMaxFlat * Math.sin(angle) * (timeTravelledOnRamp) + 0.5 * (-9.8) * (timeTravelledOnRamp) * (timeTravelledOnRamp);
+        distanceX = distanceY/Math.sin(angle)*Math.cos(angle);
+        distanceOnRamp = distanceY/Math.sin(angle);
 
         return distanceOnRamp;
     }

@@ -63,7 +63,14 @@ public class FXMLEngineController implements Initializable {
     private Button launchTrain;
 
     public static Engine engine;
-    
+
+    String inputMaterialCont;
+    double inputVolCont = 250;
+    double inuputThicCont;
+    String inputTypeLiq;
+    double inputVolLiq;
+    String inputMaterialConb;
+
     DecimalFormat formater = new DecimalFormat("###.##");
 
     @FXML
@@ -77,17 +84,25 @@ public class FXMLEngineController implements Initializable {
 
     @FXML
     private void startEngineButtonAction(ActionEvent event) {                   //does all calculations and display them. Once the deltaTime works, link these values with the time
-        String inputMaterialCont = materialContList.getValue();
-        double inputVolCont = volContSlider.getValue();
-        double inuputThicCont = thicContSlider.getValue();
-        String inputTypeLiq = typeLiqList.getValue();
-        double inputVolLiq = Double.parseDouble(volLiqText.getText());
-        String inputMaterialConb = materialCombList.getValue();
+        try {
+            inputMaterialCont = materialContList.getValue();
+            inputVolCont = volContSlider.getValue();
+            inuputThicCont = thicContSlider.getValue();
+            inputTypeLiq = typeLiqList.getValue();
+            inputVolLiq = Double.parseDouble(volLiqText.getText());
+            inputMaterialConb = materialCombList.getValue();
+        } catch (Exception e) {
+            vapTimeLabel.setText("Error! Please make sure your input is valid!");               //message label
+        }
 
         engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
 
-        vapTimeLabel.setText(formater.format(engine.calcVapTime())+ " s");
-        enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+        try {
+            vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
+            enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+        } catch (Exception e) {
+            vapTimeLabel.setText("Error! Calculation cannot precedd!");                     //message label
+        }
     }
 
     @FXML
@@ -104,7 +119,7 @@ public class FXMLEngineController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 //        pane.setBackground(AssetManager.getTrainTrack());
 
-        materialContList.getItems().addAll("copper", "aluminium", "beryllium",              //add values for the comboBox so we can refer to them later
+        materialContList.getItems().addAll("copper", "aluminium", "beryllium", //add values for the comboBox so we can refer to them later
                 "boron", "cadmium", "cesium", "chromium", "cobalt", "gold", "hafnium",
                 "iridium", "iron", "lead", "nickel", "platinum", "stainless-steel");
 
@@ -121,14 +136,15 @@ public class FXMLEngineController implements Initializable {
         volContSlider.setMajorTickUnit(50);
         volContSlider.setMinorTickCount(25);
         volContSlider.setBlockIncrement(10);
-        
+
         getVolContSliderValue();
-        getThicContSliderValue();
 
         volContSlider.valueProperty().addListener(new ChangeListener() {
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 volContLabel.setText(
                         String.valueOf((int) volContSlider.getValue() + " L"));
+                                
+                inputVolCont = (int) volContSlider.getValue();
             }
         });
 
@@ -141,10 +157,26 @@ public class FXMLEngineController implements Initializable {
         thicContSlider.setMinorTickCount(1);
         thicContSlider.setBlockIncrement(0.01);
 
+        getThicContSliderValue();
+
         thicContSlider.valueProperty().addListener(new ChangeListener() {
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 thicContLabel.setText(
                         String.valueOf(formater.format((double) thicContSlider.getValue()) + " m"));
+            }
+        });
+
+        // force the field to be numeric only
+        volLiqText.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                    String newValue) {
+                if (!newValue.matches("\\.") && !newValue.matches("\\d*")) {
+                    volLiqText.setText(newValue.replaceAll("[^\\d\\.]", ""));
+                }
+                if(Double.parseDouble(newValue) > inputVolCont){
+                    volLiqText.setText(Double.toString(inputVolCont));
+                }
             }
         });
     }
