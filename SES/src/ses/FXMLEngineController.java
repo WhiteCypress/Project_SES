@@ -8,7 +8,10 @@ package ses;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
+import javafx.animation.AnimationTimer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -27,6 +30,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 /**
@@ -73,6 +80,23 @@ public class FXMLEngineController implements Initializable {
 
     DecimalFormat formater = new DecimalFormat("###.##");
 
+    private double lastFrameTime = 0.0;
+    private ArrayList<Circle> circleList = new ArrayList<>();
+    private ArrayList<Vector2D> circleVelocityList = new ArrayList<>();
+    private int BALLS_NUMBER = 100;
+    private int WALL_HEIGHT = 300;
+    private double BAR_SPEED = 0.5;
+    private int MOLECULE_RADIUS = 10;
+    private Line l;
+    private Rectangle r;
+    private Rectangle border;
+
+    private double PARTICLE_SPEED = 10;
+
+    public void addToPane(Node node) {
+        pane.getChildren().add(node);
+    }
+
     @FXML
     private void launchTrainButtonAction(ActionEvent event) throws IOException {                //creat a train window and replace this window with it
         Parent gameParent = FXMLLoader.load(getClass().getResource("FXMLTrain.fxml"));
@@ -80,6 +104,93 @@ public class FXMLEngineController implements Initializable {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gameScene);
         window.show();
+    }
+
+    private void startEngineAnimation() {
+
+        l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);
+        r = new Rectangle(60, 40);
+        r.setX(150);
+        l.setVisible(true);
+        r.setVisible(true);
+        addToPane(l);
+        addToPane(r);
+
+        // Add 20 random circles
+        for (int i = 0; i < BALLS_NUMBER; ++i) {
+            Random rng = new Random();
+            int width = (int) pane.getPrefWidth();
+            int height = (int) pane.getPrefHeight();
+            int x = rng.nextInt(width);
+            int y = rng.nextInt(height - WALL_HEIGHT + 1) + WALL_HEIGHT;//max - min + 1) + min
+            int radius = MOLECULE_RADIUS;// rng.nextInt(20) + 10
+
+            Circle c = new Circle(0, 0, radius);
+            c.setCenterX(x);
+            c.setCenterY(y);
+            c.setFill(Color.RED);
+            c.setStroke(Color.BLACK);
+            circleList.add(c);
+            circleVelocityList.add(new Vector2D((rng.nextDouble() - 0.5) * 400, (rng.nextDouble() - 0.5) * 400));
+            addToPane(c);
+        }
+
+        lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();
+        
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // Time calculation                
+                double currentTime = (now - initialTime) / 1000000000.0;
+                double frameDeltaTime = currentTime - lastFrameTime;
+                lastFrameTime = currentTime;
+                double oldLineYPosition = l.getEndY();
+
+                if (oldLineYPosition > 40) {
+                    l.setStartY(oldLineYPosition - BAR_SPEED);
+                    l.setEndY(oldLineYPosition - BAR_SPEED);
+
+                    r.setY(oldLineYPosition - BAR_SPEED - 20);
+                } else {
+                    r.setY(oldLineYPosition - BAR_SPEED - 40);
+                }
+
+                double newLineYPosition = l.getEndY();
+                double multiplier = frameDeltaTime / (PARTICLE_SPEED * newLineYPosition) * 1000;
+                double topCap = 0.22;
+                if (multiplier > topCap) {
+                    multiplier = topCap;
+                }
+
+                // Move circles every frame
+                for (int i = 0; i < circleList.size(); i++) {
+                    Circle c = circleList.get(i);
+                    Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
+                    Vector2D v = circleVelocityList.get(i);
+                    position = position.add(v.mult(multiplier));
+                    c.setCenterX(position.getX());
+                    c.setCenterY(position.getY());
+
+                    // collision with edges
+                    if (c.getCenterX() - c.getRadius() < 5) {
+                        v.setX(Math.abs(v.getX()));
+                    }
+
+                    if (c.getCenterX() + c.getRadius() > pane.getWidth() - 10) {
+                        v.setX(-Math.abs(v.getX()));
+                    }
+
+                    if (c.getCenterY() - c.getRadius() < 0 + newLineYPosition) {
+                        v.setY(Math.abs(v.getY()));
+                    }
+
+                    if (c.getCenterY() + c.getRadius() > pane.getHeight() - 10) {
+                        v.setY(-Math.abs(v.getY()));
+                    }
+                }
+            }
+        }.start();
     }
 
     @FXML
@@ -100,6 +211,7 @@ public class FXMLEngineController implements Initializable {
         try {
             vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
             enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+            startEngineAnimation();
         } catch (Exception e) {
             vapTimeLabel.setText("Error! Calculation cannot precedd!");                     //message label
         }
@@ -143,7 +255,7 @@ public class FXMLEngineController implements Initializable {
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 volContLabel.setText(
                         String.valueOf((int) volContSlider.getValue() + " L"));
-                                
+
                 inputVolCont = (int) volContSlider.getValue();
             }
         });
@@ -174,11 +286,17 @@ public class FXMLEngineController implements Initializable {
                 if (!newValue.matches("\\.") && !newValue.matches("\\d*")) {
                     volLiqText.setText(newValue.replaceAll("[^\\d\\.]", ""));
                 }
-                if(Double.parseDouble(newValue) > inputVolCont){
+                if (Double.parseDouble(newValue) > inputVolCont) {
                     volLiqText.setText(Double.toString(inputVolCont));
                 }
             }
         });
-    }
 
+        border = new Rectangle(pane.getPrefWidth() + 20, pane.getPrefHeight() + 20, Color.LIGHTGRAY);
+        border.setStroke(Color.BLACK);
+        border.setX(0);
+        border.setY(0);
+        border.setVisible(true);
+        addToPane(border);
+    }
 }

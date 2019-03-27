@@ -5,12 +5,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" fx:id="pane" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ses.FXMLEngineController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ses.FXMLEngineController">
     <children>
-      <ImageView fitHeight="450.0" fitWidth="400.0" layoutX="14.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
       <ComboBox fx:id="materialContList" layoutX="430.0" layoutY="25.0" prefHeight="27.0" prefWidth="297.0" promptText="Material of Container" />
       <Slider fx:id="volContSlider" layoutX="560.0" layoutY="76.0" onDragDetected="#getVolContSliderValue" prefHeight="16.0" prefWidth="133.0" />
       <Label layoutX="430.0" layoutY="75.0" text="Volume of Container" />
@@ -28,5 +26,6 @@
       <Label fx:id="enginePowerLabel" layoutX="530.0" layoutY="356.0" prefHeight="17.0" prefWidth="197.0" />
       <Label fx:id="volContLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="687.0" layoutY="75.0" prefHeight="17.0" prefWidth="46.0" text="L" />
       <Label fx:id="thicContLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="687.0" layoutY="116.0" prefHeight="17.0" prefWidth="46.0" text=" m" textAlignment="RIGHT" />
+      <AnchorPane fx:id="pane" layoutX="24.0" layoutY="25.0" prefHeight="450.0" prefWidth="360.0" />
     </children>
 </AnchorPane>
