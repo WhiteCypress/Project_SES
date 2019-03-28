@@ -6,6 +6,7 @@
 package ses;
 
 import static java.lang.Math.sqrt;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
@@ -71,7 +72,7 @@ public class Train {
 
     public double calculateHeightOnRamp() {
         distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
-
+        
         return distanceY;
     }
 
@@ -80,5 +81,5 @@ public class Train {
 
         return vAngle;
     }
-
+    
 }
