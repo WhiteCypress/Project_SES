@@ -86,6 +86,7 @@ public class FXMLEngineController implements Initializable {
     private int BALLS_NUMBER = 100;
     private int WALL_HEIGHT = 300;
     private double BAR_SPEED = 0.5;
+    private double BAR_ACC;
     private int MOLECULE_RADIUS = 10;
     private Line l;
     private Rectangle r;
@@ -107,6 +108,7 @@ public class FXMLEngineController implements Initializable {
     }
 
     private void startEngineAnimation() {
+        BALLS_NUMBER = (int)(inputVolLiq * 2);
 
         l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);
         r = new Rectangle(60, 40);
@@ -142,11 +144,15 @@ public class FXMLEngineController implements Initializable {
             @Override
             public void handle(long now) {
                 // Time calculation                
-                double currentTime = (now - initialTime) / 1000000000.0;
+                double currentTime = (now - initialTime) / 1000000000.0;                //get time in seconds
                 double frameDeltaTime = currentTime - lastFrameTime;
                 lastFrameTime = currentTime;
                 double oldLineYPosition = l.getEndY();
 
+                engine.calcTempInCont(frameDeltaTime*engine.heatTransferRate);
+                //BAR_ACC = (pane.getPrefHeight() + 20)/(engine.calcPopOutTime() * engine.calcPopOutTime());
+                //BAR_SPEED = BAR_SPEED + frameDeltaTime * BAR_ACC;
+                
                 if (oldLineYPosition > 40) {
                     l.setStartY(oldLineYPosition - BAR_SPEED);
                     l.setEndY(oldLineYPosition - BAR_SPEED);
