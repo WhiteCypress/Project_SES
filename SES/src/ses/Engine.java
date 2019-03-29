@@ -280,7 +280,6 @@ public class Engine {
         double tempChangeInCont = (energyTranfered) / (liquidMass * liquidSpecificHeat);//it should be calculated each frame
         if (tempLiquid < liquidBoilPoint) {
             tempLiquid = tempLiquid + tempChangeInCont;
-            System.out.println("Difference in Q is: " + energyTranfered);
         }
         return tempLiquid;            //maybe i should add it automatically, also this is kinda similar to calcBoilTime()
     }
@@ -288,6 +287,16 @@ public class Engine {
     public double calcPressure() {                   //this returns in pa
         pressure = liquidMoles * 8.3144598 * tempLiquid / volCont;
         return pressure;
+    }
+    
+    public double calcPopOutTime(){
+        int time = 0;
+        while(calcPressure() < 300){
+            time++;
+            calcTempInCont(heatTransferRate*time);
+        }
+        
+        return time;
     }
 
     public double calcPower() {
