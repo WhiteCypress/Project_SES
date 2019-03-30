@@ -77,8 +77,11 @@ public class Train {
     }
 
     public double calculateVelocityAngle(double time) {
-        vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
-
+       vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
+        double vYI = Math.sin(angle)*vMaxFlat;
+        
+        //do not erase
+        //vAngle = (vYI-9.8*time)/Math.sin(angle);
         return vAngle;
     }
     
