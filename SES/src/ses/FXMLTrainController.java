@@ -159,7 +159,7 @@ public class FXMLTrainController implements Initializable {
             }
         });
 
-        runTimeSlider.setMin(0);
+        runTimeSlider.setMin(1);
         runTimeSlider.setMax(90);
         runTimeSlider.setValue(0);
         runTimeSlider.setShowTickLabels(true);

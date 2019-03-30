@@ -58,27 +58,27 @@ public class AssetManager {
         }*/
     }
 
-    static public ImagePattern getLandscape() {
+    static public ImagePattern getLandscape() {     //load images of the landscape
         return landscape;
     }
 
-    public static Image getEngine() {
+    public static Image getEngine() {           //load an image for the engine
         return engine;
     }    
     
-    public static Image getEnginePop() {
+    public static Image getEnginePop() {        //get the image for the engine when it pops out
         return enginePop;
     }    
     
-    public static ImagePattern getTrain() {
+    public static ImagePattern getTrain() {     //get an image for the train
         return train;
     }
 
-    public static AudioClip getEngineSound() {
+    public static AudioClip getEngineSound() {      //load the sound effect for the train
         return engineSound;
     }
 
-    public static AudioClip getTrainWhistleSound() {
+    public static AudioClip getTrainWhistleSound() {            //get the train whistle sound
         return trainWhistleSound;
     }
 

@@ -61,7 +61,7 @@ public class Engine {
         calcHeatTransferRate();
     }
   
-    public String getMaterialCont() {
+    public String getMaterialCont() {           //general getters and setters
         return materialCont;
     }
 
@@ -289,7 +289,7 @@ public class Engine {
         return pressure;
     }
     
-    public double calcPopOutTime(){
+    public double calcPopOutTime(){                 //calculates when will the button popout
         int time = 0;
         while(calcPressure() < 300){
             time++;
@@ -299,7 +299,7 @@ public class Engine {
         return time;
     }
 
-    public double calcPower() {
+    public double calcPower() {             //calculates the power of the engine 
         power = (liquidMoles * 8.3144598 * liquidBoilPoint / volCont) / liquidDensity * liquidMass;
 
         return power;
