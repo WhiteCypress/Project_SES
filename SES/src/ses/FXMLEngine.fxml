@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ses.FXMLEngineController">
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ses.FXMLEngineController">
     <children>
       <ComboBox fx:id="materialContList" layoutX="430.0" layoutY="25.0" prefHeight="27.0" prefWidth="297.0" promptText="Material of Container" />
       <Slider fx:id="volContSlider" layoutX="560.0" layoutY="76.0" onDragDetected="#getVolContSliderValue" prefHeight="16.0" prefWidth="133.0" />
@@ -20,12 +20,17 @@
       <ComboBox fx:id="typeLiqList" layoutX="430.0" layoutY="156.0" prefHeight="27.0" prefWidth="297.0" promptText="Type of Liquid" />
       <Label layoutX="430.0" layoutY="310.0" text="Vaporization Time:" />
       <Label fx:id="vapTimeLabel" layoutX="559.0" layoutY="310.0" prefHeight="17.0" prefWidth="168.0" />
-      <Button fx:id="startEngine" layoutX="445.0" layoutY="398.0" mnemonicParsing="false" onAction="#startEngineButtonAction" prefHeight="27.0" prefWidth="274.0" text="Click to run engine simulation!" />
-      <Button fx:id="launchTrain" layoutX="445.0" layoutY="445.0" mnemonicParsing="false" onAction="#launchTrainButtonAction" prefHeight="27.0" prefWidth="274.0" text="Click to launch train simulartion!" />
-      <Label layoutX="430.0" layoutY="356.0" text="Engine Power:" />
-      <Label fx:id="enginePowerLabel" layoutX="530.0" layoutY="356.0" prefHeight="17.0" prefWidth="197.0" />
+      <Button fx:id="startEngine" layoutX="445.0" layoutY="469.0" mnemonicParsing="false" onAction="#startEngineButtonAction" prefHeight="27.0" prefWidth="274.0" text="Click to run engine simulation!" />
+      <Button fx:id="launchTrain" layoutX="445.0" layoutY="516.0" mnemonicParsing="false" onAction="#launchTrainButtonAction" prefHeight="27.0" prefWidth="274.0" text="Click to launch train simulartion!" />
+      <Label layoutX="430.0" layoutY="348.0" text="Engine Power:" />
+      <Label fx:id="enginePowerLabel" layoutX="530.0" layoutY="348.0" prefHeight="17.0" prefWidth="197.0" />
       <Label fx:id="volContLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="687.0" layoutY="75.0" prefHeight="17.0" prefWidth="46.0" text="L" />
       <Label fx:id="thicContLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="687.0" layoutY="116.0" prefHeight="17.0" prefWidth="46.0" text=" m" textAlignment="RIGHT" />
-      <AnchorPane fx:id="pane" layoutX="24.0" layoutY="25.0" prefHeight="450.0" prefWidth="360.0" />
+      <AnchorPane fx:id="pane" layoutX="24.0" layoutY="25.0" prefHeight="500.0" prefWidth="360.0" />
+      <Label fx:id="userMessageLabel" alignment="CENTER" layoutX="25.0" layoutY="569.0" prefHeight="17.0" prefWidth="700.0" text="Project SES" />
+      <Label layoutX="430.0" layoutY="388.0" text="Current Pressure:" />
+      <Label layoutX="430.0" layoutY="428.0" text="Current Temperature: " />
+      <Label fx:id="currentPressureLabel" layoutX="551.0" layoutY="388.0" prefHeight="17.0" prefWidth="109.0" />
+      <Label fx:id="currentTempLabel" layoutX="577.0" layoutY="428.0" prefHeight="17.0" prefWidth="88.0" />
     </children>
 </AnchorPane>

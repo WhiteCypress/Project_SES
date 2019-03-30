@@ -8,14 +8,15 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.ImagePattern;
 
 public class AssetManager {
 
-    static private Background trainTrackIMG = null;
+    static private ImagePattern landscape = null;
 
     static private Image engine = null;
     static private Image enginePop = null;
-    static private Image train = null;
+    static private ImagePattern train = null;
 
     static private AudioClip engineSound = null;
     static private AudioClip trainWhistleSound = null;
@@ -27,8 +28,8 @@ public class AssetManager {
     static public void preloadAllAssets() {
         // Preload all images
         try {
-            Image trainTrack = new Image(fileURL("./assets/images/trainTrack.png"));
-            trainTrackIMG = new Background(
+            landscape = new ImagePattern(new Image(fileURL("./assets/images/landscape.png")));
+            /*landscapeIMG = new Background(
                     new BackgroundImage(trainTrack,
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundRepeat.NO_REPEAT,
@@ -36,13 +37,14 @@ public class AssetManager {
                             BackgroundSize.DEFAULT));
 
             engine = new Image(fileURL("./assets/images/engine.png"));
-            enginePop = new Image(fileURL("./assets/images/enginePop.png"));
-            train = new Image(fileURL("./assets/images/train.png"));
+            enginePop = new Image(fileURL("./assets/images/enginePop.png"));*/
+            train = new ImagePattern(new Image(fileURL("./assets/images/train.png")));
 
         } catch (Exception e) {
             System.out.println("Error with graphics.");
+            System.out.println(e);
         }
-        try {
+        /*try {
             // Preload all music tracks
             //backgroundMusic = new Media(fileURL("./assets/music/backgroundMusic.mp3"));
 
@@ -53,11 +55,11 @@ public class AssetManager {
     
         } catch (Exception e) {
             System.out.println("Error with sound effects.");
-        }
+        }*/
     }
 
-    static public Background getTrainTrack() {
-        return trainTrackIMG;
+    static public ImagePattern getLandscape() {
+        return landscape;
     }
 
     public static Image getEngine() {
@@ -68,7 +70,7 @@ public class AssetManager {
         return enginePop;
     }    
     
-    public static Image getTrain() {
+    public static ImagePattern getTrain() {
         return train;
     }
 

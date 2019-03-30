@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -66,14 +67,25 @@ public class FXMLTrainController implements Initializable {
     @FXML
     private Line angleTrack;
     @FXML
+    private Line flatTrack;
+    @FXML
     private Rectangle trainA;
     @FXML
     private Rectangle trainB;
+    @FXML
+    private Rectangle backgroundFlatA;
+    @FXML
+    private Rectangle backgroundFlatB;
+    @FXML
+    private Rectangle backgroundAngleA;
+    @FXML
+    private Label userMessageLabel;
 
     double massTrain;
     double runTime;
     double angle;
     double power;
+    double TRAINA_SPEED = 5;
 
     DecimalFormat formater = new DecimalFormat("###.##");
 
@@ -95,7 +107,7 @@ public class FXMLTrainController implements Initializable {
             angle = Double.parseDouble(angleText.getText());
             power = engine.calcPower();
         } catch (Exception e) {
-            vMaxFlatLabel.setText("Error! Please make sure your input is valid!");
+            userMessageLabel.setText("Error! Please make sure your input is valid!");
         }
         Train train = new Train(massTrain, power, angle, runTime);
         //train.setMovTime(runTime);
@@ -109,7 +121,7 @@ public class FXMLTrainController implements Initializable {
             heightRampLabel.setText(formater.format(train.calculateHeightOnRamp()) + " m");
             speedRampLabel.setText(formater.format(train.calculateVelocityAngle(runTime)) + " m/s");
         } catch (Exception e) {
-            vMaxFlatLabel.setText("Error! Calculation cannot precedd!");
+            userMessageLabel.setText("Error! Calculation cannot proceed!");
         }
 
         angleTrack.endYProperty().setValue(anglePane.getPrefHeight() / 1.25 - getAngle());
@@ -129,8 +141,7 @@ public class FXMLTrainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        pane.setBackground(AssetManager.getTrainTrack());
-
+        AssetManager.preloadAllAssets();
         massTrainSlider.setMin(100000);
         massTrainSlider.setMax(10000000);
         massTrainSlider.setValue(100000);
@@ -178,34 +189,44 @@ public class FXMLTrainController implements Initializable {
             }
         });
 
-        Rectangle borderf = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), Color.LIGHTGRAY);
-        borderf.setStroke(Color.BLACK);
-        borderf.setX(0);
-        borderf.setY(0);
-        borderf.setVisible(true);
-        addToFlatPane(borderf);
+        backgroundFlatA = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), AssetManager.getLandscape());
+        backgroundFlatA.setX(0);
+        backgroundFlatA.setY(0);
+        backgroundFlatA.setVisible(true);
+        backgroundFlatA.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
+        addToFlatPane(backgroundFlatA);
+        flatPane.toBack();
 
-        Rectangle bordera = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), Color.LIGHTGRAY);
-        bordera.setStroke(Color.BLACK);
-        bordera.setX(0);
-        bordera.setY(0);
-        bordera.setVisible(true);
-        addToAnglePane(bordera);
+        backgroundFlatB = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), AssetManager.getLandscape());
+        backgroundFlatB.setX(backgroundFlatA.getWidth());
+        backgroundFlatB.setY(0);
+        backgroundFlatB.setVisible(true);
+        backgroundFlatB.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
+        addToFlatPane(backgroundFlatB);
 
-        trainA = new Rectangle(50, 20);
-        trainA.setX(0);
-        trainA.setY(flatPane.getPrefHeight() / 1.25 - trainA.getHeight());
+        backgroundAngleA = new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight(), Color.LIGHTGRAY);
+        backgroundAngleA.setX(0);
+        backgroundAngleA.setY(0);
+        backgroundAngleA.setVisible(true);
+        addToAnglePane(backgroundAngleA);
+
+        trainA = new Rectangle(75, 30);
+        trainA.setX(75);
+        trainA.setY(flatPane.getPrefHeight() / 1.22 - trainA.getHeight());
+        trainA.setFill(AssetManager.getTrain());
         trainA.setVisible(true);
 
-        trainB = new Rectangle(50, 20);
+        trainB = new Rectangle(75, 30);
         trainB.setX(0);
         trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight());
+        trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
-        Line flatTrack = new Line(0, flatPane.getPrefHeight() / 1.25, flatPane.getPrefWidth(), flatPane.getPrefHeight() / 1.25);
+        flatTrack = new Line(0, flatPane.getPrefHeight() / 1.22, flatPane.getPrefWidth(), flatPane.getPrefHeight() / 1.22);
         flatTrack.setVisible(true);
         addToFlatPane(flatTrack);
         addToFlatPane(trainA);
+        flatTrack.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
 
         angleTrack = new Line(0, anglePane.getPrefHeight() / 1.05, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.05);
         angleTrack.setVisible(true);
@@ -242,10 +263,19 @@ public class FXMLTrainController implements Initializable {
                 double currentTime = (now - initialTime) / 1000000000.0;
                 double frameDeltaTime = currentTime - lastFrameTime;
                 double lastFrameTime = currentTime;
+                double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
+                TRAINA_SPEED = position;
                 
-                if(trainA.getX() + trainA.getWidth() <= flatPane.getPrefWidth() ) {
-                    double position = Double.parseDouble(distanceFlatLabel.getText().split(" ")[0])/runTimeSlider.getValue();
-                    trainA.setX(trainA.getX() + position);
+                if (backgroundFlatA.getX() + backgroundFlatA.getWidth() > 0) {
+                    backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
+                } else {
+                    backgroundFlatA.setX(backgroundFlatB.getWidth() - 10.5);
+                }
+
+                if (backgroundFlatB.getX() + backgroundFlatB.getWidth() > 0) {
+                    backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
+                } else {
+                    backgroundFlatB.setX(backgroundFlatA.getWidth() - 10);
                 }
             }
         }.start();
