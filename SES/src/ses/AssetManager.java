@@ -13,6 +13,7 @@ import javafx.scene.paint.ImagePattern;
 public class AssetManager {
 
     static private ImagePattern landscape = null;
+    static private Background landscapeBackground = null;
 
     static private Image engine = null;
     static private Image enginePop = null;
@@ -29,14 +30,16 @@ public class AssetManager {
         // Preload all images
         try {
             landscape = new ImagePattern(new Image(fileURL("./assets/images/landscape.png")));
-            /*landscapeIMG = new Background(
-                    new BackgroundImage(trainTrack,
+
+            Image landscapeIMG = new Image(fileURL("./assets/images/landscape.png"));
+            landscapeBackground = new Background(
+                    new BackgroundImage(landscapeIMG,
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundRepeat.NO_REPEAT,
                             BackgroundPosition.DEFAULT,
-                            BackgroundSize.DEFAULT));
+                            new BackgroundSize(450, 170, false, false, false, false)));
 
-            engine = new Image(fileURL("./assets/images/engine.png"));
+            /*engine = new Image(fileURL("./assets/images/engine.png"));
             enginePop = new Image(fileURL("./assets/images/enginePop.png"));*/
             train = new ImagePattern(new Image(fileURL("./assets/images/train.png")));
 
@@ -57,19 +60,22 @@ public class AssetManager {
             System.out.println("Error with sound effects.");
         }*/
     }
-
+    static public Background getLandscapeBackground() {
+        return landscapeBackground;
+    }
+    
     static public ImagePattern getLandscape() {     //load images of the landscape
         return landscape;
     }
 
     public static Image getEngine() {           //load an image for the engine
         return engine;
-    }    
-    
+    }
+
     public static Image getEnginePop() {        //get the image for the engine when it pops out
         return enginePop;
-    }    
-    
+    }
+
     public static ImagePattern getTrain() {     //get an image for the train
         return train;
     }
