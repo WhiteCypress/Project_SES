@@ -86,6 +86,7 @@ public class FXMLTrainController implements Initializable {
     double angle;
     double power;
     double TRAINA_SPEED = 5;
+    double TRAINB_SPEED = 5;
 
     DecimalFormat formater = new DecimalFormat("###.##");
 
@@ -98,7 +99,8 @@ public class FXMLTrainController implements Initializable {
     }
 
     @FXML
-    private void startTrainButtonAction(ActionEvent event) {                  //calculate all the values right now, but these should be later relie on the time change
+    private void startTrainButtonAction(ActionEvent event) {                  //calculate all the values relie on the time change
+        startTrainButton.setDisable(true);
         Engine engine = FXMLEngineController.engine;
 
         try {
@@ -159,7 +161,7 @@ public class FXMLTrainController implements Initializable {
             }
         });
 
-        runTimeSlider.setMin(0);
+        runTimeSlider.setMin(1);
         runTimeSlider.setMax(90);
         runTimeSlider.setValue(0);
         runTimeSlider.setShowTickLabels(true);
@@ -254,7 +256,6 @@ public class FXMLTrainController implements Initializable {
         power = engine.calcPower();
 
         Train tA = new Train(massTrain, power, 0, runTime);
-        Train tB = new Train(massTrain, power, angle, runTime);
 
         new AnimationTimer() {
             @Override
@@ -266,18 +267,64 @@ public class FXMLTrainController implements Initializable {
                 double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
                 TRAINA_SPEED = position;
                 
-                if (backgroundFlatA.getX() + backgroundFlatA.getWidth() > 0) {
-                    backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
-                } else {
-                    backgroundFlatA.setX(backgroundFlatB.getWidth() - 10.5);
+                int runB = 0;
+                if (currentTime <= runTime) {
+                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() > 0) {
+                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
+                    } else {
+                        backgroundFlatA.setX(backgroundFlatB.getWidth() - 10.5);
+                    }
+
+                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() > 0) {
+                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
+                    } else {
+                        backgroundFlatB.setX(backgroundFlatA.getWidth() - 10);
+                    }
+                }else{
+                    runB = 1;
+                }
+                
+                if(runB == 1){
+                    startTrainAngleAnimation();
+                    runB = 0;
                 }
 
-                if (backgroundFlatB.getX() + backgroundFlatB.getWidth() > 0) {
-                    backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
-                } else {
-                    backgroundFlatB.setX(backgroundFlatA.getWidth() - 10);
-                }
             }
         }.start();
     }
+    
+    private void startTrainAngleAnimation() {           //same as the privious method rn
+        double lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();
+        
+        Train tB = new Train(massTrain, power, angle, runTime);
+
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // Time calculation                
+                double currentTime = (now - initialTime) / 1000000000.0;
+                double frameDeltaTime = currentTime - lastFrameTime;
+                double lastFrameTime = currentTime;
+                double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
+                TRAINB_SPEED = position;
+                
+                /*
+                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() > 0) {
+                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINB_SPEED);
+                    } else {
+                        backgroundFlatA.setX(backgroundFlatB.getWidth() - 10.5);
+                    }
+
+                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() > 0) {
+                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINB_SPEED);
+                    } else {
+                        backgroundFlatB.setX(backgroundFlatA.getWidth() - 10);
+                    }*/
+                }
+
+         }.start();
+    }
+    
+    
 }

@@ -29,6 +29,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -73,7 +74,7 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Button launchTrain;
     @FXML
-    static Label userMessageLabel;
+    private Label userMessageLabel;
 
     public static Engine engine;
 
@@ -114,98 +115,104 @@ public class FXMLEngineController implements Initializable {
     }
 
     private void startEngineAnimation() {
-        BALLS_NUMBER = (int) (inputVolLiq * 2);
+        if (!materialContList.getValue().equals("Material of Container") && !typeLiqList.getValue().equals("Type of Liquid") && !volLiqText.getText().equals("") && !materialCombList.getValue().equals("Material of Combustion")) {
+            startEngine.setDisable(true);
+            launchTrain.setDisable(false);
 
-        l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);
-        r = new Rectangle(60, 40);
-        r.setX(150);
-        l.setVisible(true);
-        r.setVisible(true);
-        addToPane(l);
-        addToPane(r);
+            BALLS_NUMBER = (int) (inputVolLiq * 2);
 
-        // Add 20 random circles
-        for (int i = 0; i < BALLS_NUMBER; ++i) {
-            Random rng = new Random();
-            int width = (int) pane.getPrefWidth();
-            int height = (int) pane.getPrefHeight();
-            int x = rng.nextInt(width);
-            int y = rng.nextInt(height - WALL_HEIGHT + 1) + WALL_HEIGHT;//max - min + 1) + min
-            int radius = MOLECULE_RADIUS;// rng.nextInt(20) + 10
+            l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);
+            r = new Rectangle(60, 40);
+            r.setX(150);
+            l.setVisible(true);
+            r.setVisible(true);
+            addToPane(l);
+            addToPane(r);
 
-            Circle c = new Circle(0, 0, radius);
-            c.setCenterX(x);
-            c.setCenterY(y);
-            c.setFill(Color.RED);
-            c.setStroke(Color.BLACK);
-            circleList.add(c);
-            circleVelocityList.add(new Vector2D((rng.nextDouble() - 0.5) * 400, (rng.nextDouble() - 0.5) * 400));
-            addToPane(c);
-        }
+            // Add 20 random circles
+            for (int i = 0; i < BALLS_NUMBER; ++i) {
+                Random rng = new Random();
+                int width = (int) pane.getPrefWidth();
+                int height = (int) pane.getPrefHeight();
+                int x = rng.nextInt(width);
+                int y = rng.nextInt(height - WALL_HEIGHT + 1) + WALL_HEIGHT;//max - min + 1) + min
+                int radius = MOLECULE_RADIUS;// rng.nextInt(20) + 10
 
-        lastFrameTime = 0.0f;
-        long initialTime = System.nanoTime();
-
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // Time calculation                
-                double currentTime = (now - initialTime) / 1000000000.0;                //get time in seconds
-                double frameDeltaTime = currentTime - lastFrameTime;
-                lastFrameTime = currentTime;
-                double oldLineYPosition = l.getEndY();
-
-                engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
-                BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
-                if (oldLineYPosition > 40) {
-                    l.setStartY(oldLineYPosition - BAR_SPEED);
-                    l.setEndY(oldLineYPosition - BAR_SPEED);
-
-                    r.setY(oldLineYPosition - BAR_SPEED - 20);
-                } else {
-                    r.setY(oldLineYPosition - BAR_SPEED - 40);
-                    //AssetManager.getEngineSound().play();
-                }
-
-                double newLineYPosition = l.getEndY();
-                double multiplier = frameDeltaTime / (PARTICLE_SPEED * newLineYPosition) * 1000;
-                double topCap = 0.22;
-                if (multiplier > topCap) {
-                    multiplier = topCap;
-                }
-
-                // Move circles every frame
-                for (int i = 0; i < circleList.size(); i++) {
-                    Circle c = circleList.get(i);
-                    Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
-                    Vector2D v = circleVelocityList.get(i);
-                    position = position.add(v.mult(multiplier));
-                    c.setCenterX(position.getX());
-                    c.setCenterY(position.getY());
-
-                    // collision with edges
-                    if (c.getCenterX() - c.getRadius() < 5) {
-                        v.setX(Math.abs(v.getX()));
-                    }
-
-                    if (c.getCenterX() + c.getRadius() > pane.getWidth() - 10) {
-                        v.setX(-Math.abs(v.getX()));
-                    }
-
-                    if (c.getCenterY() - c.getRadius() < 0 + newLineYPosition) {
-                        v.setY(Math.abs(v.getY()));
-                    }
-
-                    if (c.getCenterY() + c.getRadius() > pane.getHeight() - 10) {
-                        v.setY(-Math.abs(v.getY()));
-                    }
-                }
+                Circle c = new Circle(0, 0, radius);
+                c.setCenterX(x);
+                c.setCenterY(y);
+                c.setFill(Color.RED);
+                c.setStroke(Color.BLACK);
+                circleList.add(c);
+                circleVelocityList.add(new Vector2D((rng.nextDouble() - 0.5) * 400, (rng.nextDouble() - 0.5) * 400));
+                addToPane(c);
             }
-        }.start();
+
+            lastFrameTime = 0.0f;
+            long initialTime = System.nanoTime();
+
+            new AnimationTimer() {
+                @Override
+                public void handle(long now) {
+                    // Time calculation                
+                    double currentTime = (now - initialTime) / 1000000000.0;                //get time in seconds
+                    double frameDeltaTime = currentTime - lastFrameTime;
+                    lastFrameTime = currentTime;
+                    double oldLineYPosition = l.getEndY();
+
+                    engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
+                    BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
+                    if (oldLineYPosition > 40) {
+                        l.setStartY(oldLineYPosition - BAR_SPEED);
+                        l.setEndY(oldLineYPosition - BAR_SPEED);
+
+                        r.setY(oldLineYPosition - BAR_SPEED - 20);
+                    } else {
+                        r.setY(oldLineYPosition - BAR_SPEED - 40);
+                        //AssetManager.getEngineSound().play();
+                    }
+
+                    double newLineYPosition = l.getEndY();
+                    double multiplier = frameDeltaTime / (PARTICLE_SPEED / 2 * newLineYPosition) * 1000;
+                    double topCap = 0.22;
+                    if (multiplier > topCap) {
+                        multiplier = topCap;
+                    }
+
+                    // Move circles every frame
+                    for (int i = 0; i < circleList.size(); i++) {
+                        Circle c = circleList.get(i);
+                        Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
+                        Vector2D v = circleVelocityList.get(i);
+                        position = position.add(v.mult(multiplier));
+                        c.setCenterX(position.getX());
+                        c.setCenterY(position.getY());
+
+                        // collision with edges
+                        if (c.getCenterX() - c.getRadius() < 5) {
+                            v.setX(Math.abs(v.getX()));
+                        }
+
+                        if (c.getCenterX() + c.getRadius() > pane.getWidth() - 10) {
+                            v.setX(-Math.abs(v.getX()));
+                        }
+
+                        if (c.getCenterY() - c.getRadius() < 0 + newLineYPosition) {
+                            v.setY(Math.abs(v.getY()));
+                        }
+
+                        if (c.getCenterY() + c.getRadius() > pane.getHeight() - 10) {
+                            v.setY(-Math.abs(v.getY()));
+                        }
+                    }
+                }
+            }.start();
+        }
     }
 
     @FXML
     private void startEngineButtonAction(ActionEvent event) {                   //does all calculations and display them. Once the deltaTime works, link these values with the time
+        int error = 0;
         try {
             inputMaterialCont = materialContList.getValue();
             inputVolCont = volContSlider.getValue();
@@ -213,16 +220,20 @@ public class FXMLEngineController implements Initializable {
             inputTypeLiq = typeLiqList.getValue();
             inputVolLiq = Double.parseDouble(volLiqText.getText());
             inputMaterialConb = materialCombList.getValue();
+
+            engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
+
         } catch (Exception e) {
+            error = 1;
             userMessageLabel.setText("Error! Please make sure your input is valid!");               //message label
         }
 
-        engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
-
         try {
-            vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
-            enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
-            startEngineAnimation();
+            if (error == 0) {
+                vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
+                enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+                startEngineAnimation();
+            }
         } catch (Exception e) {
             userMessageLabel.setText("Error! Calculation cannot proceed!");                     //message label
         }
@@ -297,11 +308,18 @@ public class FXMLEngineController implements Initializable {
                 if (!newValue.matches("\\.") && !newValue.matches("\\d*")) {
                     volLiqText.setText(newValue.replaceAll("[^\\d\\.]", ""));
                 }
-                if (Double.parseDouble(newValue) > inputVolCont) {
-                    volLiqText.setText(Double.toString(inputVolCont));
+                try {
+                    userMessageLabel.setText("Project SES");
+                    if (Double.parseDouble(newValue) > inputVolCont) {
+                        volLiqText.setText(Double.toString(inputVolCont));
+                    }
+                } catch (Exception e) {
+                    userMessageLabel.setText("Please do not enter empty value");
                 }
             }
         });
+        
+        launchTrain.setDisable(true);
 
         border = new Rectangle(pane.getPrefWidth() + 20, pane.getPrefHeight() + 20, Color.LIGHTGRAY);
         border.setStroke(Color.BLACK);
