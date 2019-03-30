@@ -65,9 +65,15 @@ public class FXMLEngineController implements Initializable {
     @FXML
     private Label enginePowerLabel;
     @FXML
+    private Label currentPressureLabel;
+    @FXML
+    private Label currentTempLabel;
+    @FXML
     private Button startEngine;
     @FXML
     private Button launchTrain;
+    @FXML
+    static Label userMessageLabel;
 
     public static Engine engine;
 
@@ -84,7 +90,7 @@ public class FXMLEngineController implements Initializable {
     private ArrayList<Circle> circleList = new ArrayList<>();
     private ArrayList<Vector2D> circleVelocityList = new ArrayList<>();
     private int BALLS_NUMBER = 100;
-    private int WALL_HEIGHT = 300;
+    private int WALL_HEIGHT = 400;
     private double BAR_SPEED = 0.5;
     private double BAR_ACC;
     private int MOLECULE_RADIUS = 10;
@@ -108,7 +114,7 @@ public class FXMLEngineController implements Initializable {
     }
 
     private void startEngineAnimation() {
-        BALLS_NUMBER = (int)(inputVolLiq * 2);
+        BALLS_NUMBER = (int) (inputVolLiq * 2);
 
         l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);
         r = new Rectangle(60, 40);
@@ -139,7 +145,7 @@ public class FXMLEngineController implements Initializable {
 
         lastFrameTime = 0.0f;
         long initialTime = System.nanoTime();
-        
+
         new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -149,10 +155,8 @@ public class FXMLEngineController implements Initializable {
                 lastFrameTime = currentTime;
                 double oldLineYPosition = l.getEndY();
 
-                engine.calcTempInCont(frameDeltaTime*engine.heatTransferRate);
-                //BAR_ACC = (pane.getPrefHeight() + 20)/(engine.calcPopOutTime() * engine.calcPopOutTime());
-                //BAR_SPEED = BAR_SPEED + frameDeltaTime * BAR_ACC;
-                
+                engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
+                BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
                 if (oldLineYPosition > 40) {
                     l.setStartY(oldLineYPosition - BAR_SPEED);
                     l.setEndY(oldLineYPosition - BAR_SPEED);
@@ -160,6 +164,7 @@ public class FXMLEngineController implements Initializable {
                     r.setY(oldLineYPosition - BAR_SPEED - 20);
                 } else {
                     r.setY(oldLineYPosition - BAR_SPEED - 40);
+                    //AssetManager.getEngineSound().play();
                 }
 
                 double newLineYPosition = l.getEndY();
@@ -209,7 +214,7 @@ public class FXMLEngineController implements Initializable {
             inputVolLiq = Double.parseDouble(volLiqText.getText());
             inputMaterialConb = materialCombList.getValue();
         } catch (Exception e) {
-            vapTimeLabel.setText("Error! Please make sure your input is valid!");               //message label
+            userMessageLabel.setText("Error! Please make sure your input is valid!");               //message label
         }
 
         engine = new Engine(inputMaterialCont, inputVolCont, inuputThicCont, inputTypeLiq, inputVolLiq, inputMaterialConb);
@@ -219,7 +224,7 @@ public class FXMLEngineController implements Initializable {
             enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
             startEngineAnimation();
         } catch (Exception e) {
-            vapTimeLabel.setText("Error! Calculation cannot precedd!");                     //message label
+            userMessageLabel.setText("Error! Calculation cannot proceed!");                     //message label
         }
     }
 
