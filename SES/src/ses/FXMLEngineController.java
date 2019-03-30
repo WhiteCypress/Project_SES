@@ -205,6 +205,12 @@ public class FXMLEngineController implements Initializable {
                             v.setY(-Math.abs(v.getY()));
                         }
                     }
+                    
+                    //change the values dynamicly
+                    engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
+                    currentPressureLabel.setText(formater.format(engine.calcCurrentPressure(engine.vapTime, currentTime)) + " Pa");
+                    currentTempLabel.setText(formater.format(engine.calcTempInCont(currentTime)) + " Degree");
+                    System.out.println(formater.format(engine.calcPressure()) + " Pa");
                 }
             }.start();
         }
