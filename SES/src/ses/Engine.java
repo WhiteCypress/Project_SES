@@ -34,11 +34,12 @@ public class Engine {
     double liquidMoles;
     double tempLiquid;
     double pressure;
+    double currentPressure = 0;
 
     double area = 0.01;     //this is the area of the button and it's set to be 50-sqcm by default
 
     final double SIConvertion = 1000;
-    
+
     public Engine() {
 
     }
@@ -55,12 +56,12 @@ public class Engine {
         this.liquidMass = calcLiquidMass();
         deriveFireTemp();
         deriveTransferConstant();
-        
+
         calcMoles();
         calcLiquidMass();
         calcHeatTransferRate();
     }
-  
+
     public String getMaterialCont() {           //general getters and setters
         return materialCont;
     }
@@ -166,7 +167,7 @@ public class Engine {
             case "cobalt":
                 transferConstant = 122;
                 break;
-            
+
             case "gold":
                 transferConstant = 327;
 
@@ -289,13 +290,20 @@ public class Engine {
         return pressure;
     }
     
-    public double calcPopOutTime(){                 //calculates when will the button popout
-        int time = 0;
-        while(calcPressure() < 300){
-            time++;
-            calcTempInCont(heatTransferRate*time);
+    public double calcCurrentPressure(double vapTime, double currentTime) {
+        if (currentTime <= vapTime) {
+           currentPressure = currentTime / vapTime * liquidMoles * 8.3144598 * liquidBoilPoint / volCont;
         }
-        
+        return currentPressure;
+    }
+
+    public double calcPopOutTime() {                 //calculates when will the button popout
+        int time = 0;
+        while (calcPressure() < 300) {
+            time++;
+            calcTempInCont(heatTransferRate * time);
+        }
+
         return time;
     }
 
