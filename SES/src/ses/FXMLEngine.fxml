@@ -30,7 +30,7 @@
       <Label fx:id="userMessageLabel" alignment="CENTER" layoutX="25.0" layoutY="569.0" prefHeight="17.0" prefWidth="700.0" text="Project SES" />
       <Label layoutX="430.0" layoutY="388.0" text="Current Pressure:" />
       <Label layoutX="430.0" layoutY="428.0" text="Current Temperature: " />
-      <Label fx:id="currentPressureLabel" layoutX="551.0" layoutY="388.0" prefHeight="17.0" prefWidth="109.0" />
-      <Label fx:id="currentTempLabel" layoutX="577.0" layoutY="428.0" prefHeight="17.0" prefWidth="88.0" />
+      <Label fx:id="currentPressureLabel" layoutX="551.0" layoutY="388.0" prefHeight="17.0" prefWidth="142.0" />
+      <Label fx:id="currentTempLabel" layoutX="577.0" layoutY="428.0" prefHeight="17.0" prefWidth="142.0" />
     </children>
 </AnchorPane>
