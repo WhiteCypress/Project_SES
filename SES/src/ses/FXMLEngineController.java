@@ -159,7 +159,7 @@ public class FXMLEngineController implements Initializable {
                     double frameDeltaTime = currentTime - lastFrameTime;
                     lastFrameTime = currentTime;
                     double oldLineYPosition = l.getEndY();
-
+                    
                     engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
                     BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
                     if (oldLineYPosition > 40) {

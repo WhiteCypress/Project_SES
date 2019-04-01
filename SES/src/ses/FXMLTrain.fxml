@@ -15,22 +15,27 @@
       <Button fx:id="startTrainButton" layoutX="525.0" layoutY="382.0" mnemonicParsing="false" onAction="#startTrainButtonAction" prefWidth="194.0" text="Click to run train simulation! " />
       <Label layoutX="522.0" layoutY="296.0" text="Angle of the ramp:" />
       <TextField fx:id="angleText" layoutX="644.0" layoutY="291.0" prefHeight="27.0" prefWidth="60.0" />
-      <Label layoutX="21.0" layoutY="483.0" text="Maximum velocity on flat surface:" />
-      <Label layoutX="21.0" layoutY="451.0" text="Distance travelled on flat surface:" />
-      <Label layoutX="21.0" layoutY="516.0" text="Acceleration on flat surface:" />
-      <Label layoutX="392.0" layoutY="451.0" text="Maximum distance travelled on ramp:" />
-      <Label layoutX="392.0" layoutY="483.0" text="Maximum height reached on ramp:" />
-      <Label fx:id="distanceFlatLabel" layoutX="237.0" layoutY="451.0" prefHeight="17.0" prefWidth="93.0" />
-      <Label fx:id="accelerationFlatLabel" layoutX="203.0" layoutY="516.0" prefHeight="17.0" prefWidth="93.0" />
-      <Label fx:id="vMaxFlatLabel" layoutX="237.0" layoutY="483.0" prefHeight="17.0" prefWidth="93.0" />
-      <Label fx:id="distanceRampLabel" layoutX="630.0" layoutY="451.0" prefHeight="17.0" prefWidth="93.0" />
-      <Label fx:id="heightRampLabel" layoutX="613.0" layoutY="483.0" prefHeight="17.0" prefWidth="93.0" />
-      <Label layoutX="392.0" layoutY="516.0" text="Current speed on ramp:" />
-      <Label fx:id="speedRampLabel" layoutX="547.0" layoutY="516.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label layoutX="21.0" layoutY="470.0" text="Maximum velocity on flat surface:" />
+      <Label layoutX="21.0" layoutY="438.0" text="Distance travelled on flat surface:" />
+      <Label layoutX="21.0" layoutY="503.0" text="Acceleration on flat surface:" />
+      <Label layoutX="392.0" layoutY="438.0" text="Maximum distance travelled on ramp:" />
+      <Label layoutX="392.0" layoutY="470.0" text="Maximum height reached on ramp:" />
+      <Label fx:id="distanceFlatLabel" layoutX="237.0" layoutY="438.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label fx:id="accelerationFlatLabel" layoutX="203.0" layoutY="503.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label fx:id="vMaxFlatLabel" layoutX="237.0" layoutY="470.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label fx:id="distanceRampLabel" layoutX="630.0" layoutY="438.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label fx:id="heightRampLabel" layoutX="613.0" layoutY="470.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label layoutX="392.0" layoutY="503.0" text="Current speed on ramp:" />
+      <Label fx:id="speedRampLabel" layoutX="547.0" layoutY="503.0" prefHeight="17.0" prefWidth="93.0" />
       <Label fx:id="massTrainLabel" alignment="CENTER_RIGHT" layoutX="522.0" layoutY="106.0" onDragDetected="#getMassTrainSliderValue" prefHeight="17.0" prefWidth="182.0" text="kg" />
       <Label fx:id="runTimeLabel" alignment="CENTER_RIGHT" layoutX="522.0" layoutY="229.0" onDragDetected="#getRunTimeSliderValue" prefHeight="17.0" prefWidth="182.0" text="sec" />
       <AnchorPane fx:id="flatPane" layoutX="19.0" layoutY="17.0" maxWidth="-Infinity" prefHeight="170.0" prefWidth="450.0" />
-      <AnchorPane fx:id="anglePane" layoutX="19.0" layoutY="208.0" prefHeight="218.0" prefWidth="450.0" />
+      <AnchorPane fx:id="anglePane" layoutX="19.0" layoutY="208.0" prefHeight="218.0" prefWidth="450.0">
+         <children>
+            <AnchorPane fx:id="trainAndTrackPane" prefHeight="218.0" prefWidth="450.0" />
+         </children></AnchorPane>
       <Label fx:id="userMessageLabel" alignment="CENTER" layoutX="25.0" layoutY="569.0" prefWidth="700.0" text="Project SES" />
+      <Label layoutX="21.0" layoutY="537.0" text="Current speed on flat surface:" />
+      <Label fx:id="currentSpeedFlatLabel" layoutX="215.0" layoutY="537.0" prefHeight="17.0" prefWidth="93.0" />
    </children>
 </AnchorPane>

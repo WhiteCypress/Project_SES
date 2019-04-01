@@ -41,6 +41,8 @@ public class FXMLTrainController implements Initializable {
     @FXML
     AnchorPane anglePane;
     @FXML
+    AnchorPane trainAndTrackPane;
+    @FXML
     private Slider massTrainSlider;
     @FXML
     private Label massTrainLabel;
@@ -80,7 +82,11 @@ public class FXMLTrainController implements Initializable {
     private Rectangle backgroundAngleA;
     @FXML
     private Label userMessageLabel;
-
+    @FXML
+    private Label currentSpeedFlatLabel;
+    
+    private double lastFrameTime = 0.0;
+    private double lastFrameTimeB = 0.0;
     double massTrain;
     double runTime;
     double angle;
@@ -126,8 +132,10 @@ public class FXMLTrainController implements Initializable {
             userMessageLabel.setText("Error! Calculation cannot proceed!");
         }
 
-        angleTrack.endYProperty().setValue(anglePane.getPrefHeight() / 1.25 - getAngle());
+        double angle=-Double.parseDouble(angleText.getText());
+        trainAndTrackPane.setRotate(angle);
         startTrainFlatAnimation();
+        startTrainAngleAnimation();
 
     }
 
@@ -144,6 +152,9 @@ public class FXMLTrainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         AssetManager.preloadAllAssets();
+        
+        flatPane.setBackground(AssetManager.getLandscapeBackground());
+        
         massTrainSlider.setMin(100000);
         massTrainSlider.setMax(10000000);
         massTrainSlider.setValue(100000);
@@ -210,7 +221,6 @@ public class FXMLTrainController implements Initializable {
         backgroundAngleA.setX(0);
         backgroundAngleA.setY(0);
         backgroundAngleA.setVisible(true);
-        addToAnglePane(backgroundAngleA);
 
         trainA = new Rectangle(75, 30);
         trainA.setX(75);
@@ -219,7 +229,7 @@ public class FXMLTrainController implements Initializable {
         trainA.setVisible(true);
 
         trainB = new Rectangle(75, 30);
-        trainB.setX(0);
+        trainB.setX(anglePane.getPrefWidth()/2 - 65);
         trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
@@ -232,10 +242,12 @@ public class FXMLTrainController implements Initializable {
 
         angleTrack = new Line(0, anglePane.getPrefHeight() / 1.05, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.05);
         angleTrack.setVisible(true);
+        trainAndTrackPane.getChildren().addAll(angleTrack,trainB);
+
+        trainAndTrackPane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
+        anglePane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         angleTrack.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
 
-        addToAnglePane(angleTrack);
-        addToAnglePane(trainB);
     }
 
     private double getAngle() {
@@ -246,8 +258,6 @@ public class FXMLTrainController implements Initializable {
     }
 
     private void startTrainFlatAnimation() {
-        double lastFrameTime = 0.0f;
-        long initialTime = System.nanoTime();
 
         Engine engine = FXMLEngineController.engine;
 //        massTrain = massTrainSlider.getValue();
@@ -255,7 +265,10 @@ public class FXMLTrainController implements Initializable {
 //        angle = Double.parseDouble(angleText.getText());
         power = engine.calcPower();
 
-        Train tA = new Train(massTrain, power, 0, runTime);
+//        Train tA = new Train(massTrain, power, 0, runTime);
+        
+        lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();  
 
         new AnimationTimer() {
             @Override
@@ -263,24 +276,32 @@ public class FXMLTrainController implements Initializable {
                 // Time calculation                
                 double currentTime = (now - initialTime) / 1000000000.0;
                 double frameDeltaTime = currentTime - lastFrameTime;
-                double lastFrameTime = currentTime;
-                double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
-                TRAINA_SPEED = position;
+                lastFrameTime = currentTime;
                 
+                double maxSpeed = Double.parseDouble(vMaxFlatLabel.getText().split(" ")[0]);
+                double computedSpeed = Double.parseDouble(accelerationFlatLabel.getText().split(" ")[0]) * currentTime;
+
+                TRAINA_SPEED = computedSpeed > maxSpeed ? maxSpeed : computedSpeed;
+
+                currentSpeedFlatLabel.setText(formater.format(TRAINA_SPEED) + " m/s");
+
                 int runB = 0;
                 if (currentTime <= runTime) {
-                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() > 0) {
+                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() >= 0) {
                         backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
                     } else {
-                        backgroundFlatA.setX(backgroundFlatB.getWidth() - 10.5);
+                        backgroundFlatA.setX(backgroundFlatB.getWidth() - TRAINA_SPEED);
+                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
                     }
 
-                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() > 0) {
+                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() >= 0) {
                         backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
                     } else {
-                        backgroundFlatB.setX(backgroundFlatA.getWidth() - 10);
+                        backgroundFlatB.setX(backgroundFlatA.getWidth() - TRAINA_SPEED);
+                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
                     }
-                }else{
+                    
+                } else{
                     runB = 1;
                 }
                 
@@ -294,34 +315,43 @@ public class FXMLTrainController implements Initializable {
     }
     
     private void startTrainAngleAnimation() {           //same as the privious method rn
-        double lastFrameTime = 0.0f;
+        lastFrameTimeB = 0.0f;
         long initialTime = System.nanoTime();
         
-        Train tB = new Train(massTrain, power, angle, runTime);
-
         new AnimationTimer() {
             @Override
             public void handle(long now) {
                 // Time calculation                
                 double currentTime = (now - initialTime) / 1000000000.0;
-                double frameDeltaTime = currentTime - lastFrameTime;
-                double lastFrameTime = currentTime;
+                double frameDeltaTime = currentTime - lastFrameTimeB;
+                lastFrameTime = currentTime;
                 double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
                 TRAINB_SPEED = position;
                 
-                /*
-                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() > 0) {
-                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINB_SPEED);
+                double maxSpeed = Double.parseDouble(vMaxFlatLabel.getText().split(" ")[0]);
+                double computedSpeed = Double.parseDouble(accelerationFlatLabel.getText().split(" ")[0]) * currentTime;
+
+                TRAINA_SPEED = computedSpeed > maxSpeed ? maxSpeed : computedSpeed;
+
+                currentSpeedFlatLabel.setText(formater.format(TRAINA_SPEED) + " m/s");
+
+                int runB = 0;
+                if (currentTime <= runTime) {
+                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() >= 0) {
+                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
                     } else {
-                        backgroundFlatA.setX(backgroundFlatB.getWidth() - 10.5);
+                        backgroundFlatA.setX(backgroundFlatB.getWidth() - TRAINA_SPEED);
+                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
                     }
 
-                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() > 0) {
-                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINB_SPEED);
+                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() >= 0) {
+                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
                     } else {
-                        backgroundFlatB.setX(backgroundFlatA.getWidth() - 10);
-                    }*/
+                        backgroundFlatB.setX(backgroundFlatA.getWidth() - TRAINA_SPEED);
+                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
+                    }
                 }
+            }
 
          }.start();
     }
