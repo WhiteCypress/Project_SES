@@ -196,8 +196,8 @@ public class FXMLTrainController implements Initializable {
                 if (!newValue.matches("\\.") && !newValue.matches("\\d*")) {
                     angleText.setText(newValue.replaceAll("[^\\d\\.]", ""));
                 }
-                if (Double.parseDouble(newValue) > 60) {
-                    angleText.setText("60");
+                if (Double.parseDouble(newValue) > 52) {
+                    angleText.setText("52");
                 }
             }
         });
