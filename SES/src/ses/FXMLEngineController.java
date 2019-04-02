@@ -100,6 +100,8 @@ public class FXMLEngineController implements Initializable {
     private Rectangle border;
 
     private double PARTICLE_SPEED = 10;
+    
+    private boolean running = true;             //if this is false, the animation timer will handle nothing, it doesn't stop it though
 
     public void addToPane(Node node) {
         pane.getChildren().add(node);
@@ -112,6 +114,7 @@ public class FXMLEngineController implements Initializable {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gameScene);
         window.show();
+        running = false;
     }
 
     private void startEngineAnimation() {
@@ -154,63 +157,66 @@ public class FXMLEngineController implements Initializable {
             new AnimationTimer() {
                 @Override
                 public void handle(long now) {
-                    // Time calculation                
-                    double currentTime = (now - initialTime) / 1000000000.0;                //get time in seconds
-                    double frameDeltaTime = currentTime - lastFrameTime;
-                    lastFrameTime = currentTime;
-                    double oldLineYPosition = l.getEndY();
-                    
-                    engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
-                    BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
-                    if (oldLineYPosition > 40) {
-                        l.setStartY(oldLineYPosition - BAR_SPEED);
-                        l.setEndY(oldLineYPosition - BAR_SPEED);
+                    if (running) {
+                        // Time calculation                
+                        double currentTime = (now - initialTime) / 1000000000.0;                //get time in seconds
+                        double frameDeltaTime = currentTime - lastFrameTime;
+                        lastFrameTime = currentTime;
+                        double oldLineYPosition = l.getEndY();
 
-                        r.setY(oldLineYPosition - BAR_SPEED - 20);
-                    } else {
-                        r.setY(oldLineYPosition - BAR_SPEED - 40);
-                        //AssetManager.getEngineSound().play();
+                        engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
+                        BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
+                        if (oldLineYPosition > 40) {
+                            l.setStartY(oldLineYPosition - BAR_SPEED);
+                            l.setEndY(oldLineYPosition - BAR_SPEED);
+
+                            r.setY(oldLineYPosition - BAR_SPEED - 20);
+                        } else {
+                            r.setY(oldLineYPosition - BAR_SPEED - 40);
+                            //AssetManager.getEngineSound().play();
+                        }
+
+                        double newLineYPosition = l.getEndY();
+                        double multiplier = frameDeltaTime / (PARTICLE_SPEED / 2 * newLineYPosition) * 1000;
+                        double topCap = 0.22;
+                        if (multiplier > topCap) {
+                            multiplier = topCap;
+                        }
+
+                        // Move circles every frame
+                        for (int i = 0; i < circleList.size(); i++) {
+                            Circle c = circleList.get(i);
+                            Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
+                            Vector2D v = circleVelocityList.get(i);
+                            position = position.add(v.mult(multiplier));
+                            c.setCenterX(position.getX());
+                            c.setCenterY(position.getY());
+
+                            // collision with edges
+                            if (c.getCenterX() - c.getRadius() < 5) {
+                                v.setX(Math.abs(v.getX()));
+                            }
+
+                            if (c.getCenterX() + c.getRadius() > pane.getWidth() - 10) {
+                                v.setX(-Math.abs(v.getX()));
+                            }
+
+                            if (c.getCenterY() - c.getRadius() < 0 + newLineYPosition) {
+                                v.setY(Math.abs(v.getY()));
+                            }
+
+                            if (c.getCenterY() + c.getRadius() > pane.getHeight() - 10) {
+                                v.setY(-Math.abs(v.getY()));
+                            }
+                        }
+
+                        //change the values dynamicly
+                        engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
+                        currentPressureLabel.setText(formater.format(101.2 + engine.calcCurrentPressure(engine.vapTime, currentTime)) + " Pa");
+                        currentTempLabel.setText(formater.format(engine.calcTempInCont(currentTime)) + " Degree");
+                    }else{
+                        this.stop();
                     }
-
-                    double newLineYPosition = l.getEndY();
-                    double multiplier = frameDeltaTime / (PARTICLE_SPEED / 2 * newLineYPosition) * 1000;
-                    double topCap = 0.22;
-                    if (multiplier > topCap) {
-                        multiplier = topCap;
-                    }
-
-                    // Move circles every frame
-                    for (int i = 0; i < circleList.size(); i++) {
-                        Circle c = circleList.get(i);
-                        Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
-                        Vector2D v = circleVelocityList.get(i);
-                        position = position.add(v.mult(multiplier));
-                        c.setCenterX(position.getX());
-                        c.setCenterY(position.getY());
-
-                        // collision with edges
-                        if (c.getCenterX() - c.getRadius() < 5) {
-                            v.setX(Math.abs(v.getX()));
-                        }
-
-                        if (c.getCenterX() + c.getRadius() > pane.getWidth() - 10) {
-                            v.setX(-Math.abs(v.getX()));
-                        }
-
-                        if (c.getCenterY() - c.getRadius() < 0 + newLineYPosition) {
-                            v.setY(Math.abs(v.getY()));
-                        }
-
-                        if (c.getCenterY() + c.getRadius() > pane.getHeight() - 10) {
-                            v.setY(-Math.abs(v.getY()));
-                        }
-                    }
-                    
-                    //change the values dynamicly
-                    engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
-                    currentPressureLabel.setText(formater.format(101.2 + engine.calcCurrentPressure(engine.vapTime, currentTime)) + " Pa");
-                    currentTempLabel.setText(formater.format(engine.calcTempInCont(currentTime)) + " Degree");
-                    System.out.println(formater.format(engine.calcPressure()) + " Pa");
                 }
             }.start();
         }
@@ -324,7 +330,7 @@ public class FXMLEngineController implements Initializable {
                 }
             }
         });
-        
+
         launchTrain.setDisable(true);
 
         border = new Rectangle(pane.getPrefWidth() + 20, pane.getPrefHeight() + 20, Color.LIGHTGRAY);
