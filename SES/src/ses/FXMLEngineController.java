@@ -124,7 +124,7 @@ public class FXMLEngineController implements Initializable {
 
             BALLS_NUMBER = (int) (inputVolLiq * 2);
 
-            l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);
+            l = new Line(0, WALL_HEIGHT, pane.getPrefWidth() + 20, WALL_HEIGHT);        //creates the line indicating the top of the liquid/gas
             r = new Rectangle(60, 40);
             r.setX(150);
             l.setVisible(true);
@@ -132,14 +132,14 @@ public class FXMLEngineController implements Initializable {
             addToPane(l);
             addToPane(r);
 
-            // Add 20 random circles
+            // Adds random circles
             for (int i = 0; i < BALLS_NUMBER; ++i) {
                 Random rng = new Random();
                 int width = (int) pane.getPrefWidth();
                 int height = (int) pane.getPrefHeight();
                 int x = rng.nextInt(width);
-                int y = rng.nextInt(height - WALL_HEIGHT + 1) + WALL_HEIGHT;//max - min + 1) + min
-                int radius = MOLECULE_RADIUS;// rng.nextInt(20) + 10
+                int y = rng.nextInt(height - WALL_HEIGHT + 1) + WALL_HEIGHT;        //sets the height of the bar
+                int radius = MOLECULE_RADIUS;
 
                 Circle c = new Circle(0, 0, radius);
                 c.setCenterX(x);
@@ -165,8 +165,8 @@ public class FXMLEngineController implements Initializable {
                         double oldLineYPosition = l.getEndY();
 
                         engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
-                        BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));
-                        if (oldLineYPosition > 40) {
+                        BAR_SPEED = frameDeltaTime * ((WALL_HEIGHT - 20) / Double.parseDouble(vapTimeLabel.getText().split(" ")[0]));       //sets the speed of the molecules
+                        if (oldLineYPosition > 40) {            //sets the position of the bar
                             l.setStartY(oldLineYPosition - BAR_SPEED);
                             l.setEndY(oldLineYPosition - BAR_SPEED);
 
@@ -178,7 +178,7 @@ public class FXMLEngineController implements Initializable {
 
                         double newLineYPosition = l.getEndY();
                         double multiplier = frameDeltaTime / (PARTICLE_SPEED / 2 * newLineYPosition) * 1000;
-                        double topCap = 0.22;
+                        double topCap = 0.22;       //sets the maximum height of the bar
                         if (multiplier > topCap) {
                             multiplier = topCap;
                         }
@@ -210,7 +210,7 @@ public class FXMLEngineController implements Initializable {
                             }
                         }
 
-                        //change the values dynamicly
+                        //Changes the values dynamically
                         engine.calcTempInCont(frameDeltaTime * engine.heatTransferRate);
                         currentPressureLabel.setText(formater.format(101.2 + engine.calcCurrentPressure(engine.vapTime, currentTime)) + " Pa");
                         currentTempLabel.setText(formater.format(engine.calcTempInCont(currentTime)) + " Degree");
@@ -223,7 +223,7 @@ public class FXMLEngineController implements Initializable {
     }
 
     @FXML
-    private void startEngineButtonAction(ActionEvent event) {                   //does all calculations and display them. Once the deltaTime works, link these values with the time
+    private void startEngineButtonAction(ActionEvent event) {                   //Performs all calculations and display them. Once the deltaTime works, links these values with the time
         int error = 0;
         try {
             inputMaterialCont = materialContList.getValue();
@@ -252,12 +252,12 @@ public class FXMLEngineController implements Initializable {
     }
 
     @FXML
-    private void getVolContSliderValue() {                                      //display the value of volCont
+    private void getVolContSliderValue() {                                      //display the value of volume of container
         volContLabel.setText(volContSlider.getValue() + " L");
     }
 
     @FXML
-    private void getThicContSliderValue() {                                     //display the value of thicCont
+    private void getThicContSliderValue() {                                     //display the value of thickness of container
         thicContLabel.setText(formater.format(thicContSlider.getValue()) + " m");
     }
 
@@ -274,7 +274,7 @@ public class FXMLEngineController implements Initializable {
         materialCombList.getItems().addAll("stove", "natural gas", "methane",
                 "hydrogen", "carbon monoxide", "wood", "charcoal");
 
-        volContSlider.setMin(5);                                                //set default values for the slider
+        volContSlider.setMin(5);                                                //set default values for the volume of container slider
         volContSlider.setMax(500);
         volContSlider.setValue(250);
         volContSlider.setShowTickLabels(true);
@@ -285,7 +285,7 @@ public class FXMLEngineController implements Initializable {
 
         getVolContSliderValue();
 
-        volContSlider.valueProperty().addListener(new ChangeListener() {
+        volContSlider.valueProperty().addListener(new ChangeListener() {           //displays the values of the slider as they change 
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 volContLabel.setText(
                         String.valueOf((int) volContSlider.getValue() + " L"));
@@ -294,7 +294,7 @@ public class FXMLEngineController implements Initializable {
             }
         });
 
-        thicContSlider.setMin(0.01);
+        thicContSlider.setMin(0.01);                                                //set default values for the thickness of container slider
         thicContSlider.setMax(0.1);
         thicContSlider.setValue(0.05);
         thicContSlider.setShowTickLabels(true);
@@ -305,14 +305,14 @@ public class FXMLEngineController implements Initializable {
 
         getThicContSliderValue();
 
-        thicContSlider.valueProperty().addListener(new ChangeListener() {
+        thicContSlider.valueProperty().addListener(new ChangeListener() {           //displays the values of the slider as they change 
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 thicContLabel.setText(
                         String.valueOf(formater.format((double) thicContSlider.getValue()) + " m"));
             }
         });
 
-        // force the field to be numeric only
+        //Ensures the field to be numeric only
         volLiqText.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue,
@@ -333,7 +333,7 @@ public class FXMLEngineController implements Initializable {
 
         launchTrain.setDisable(true);
 
-        border = new Rectangle(pane.getPrefWidth() + 20, pane.getPrefHeight() + 20, Color.LIGHTGRAY);
+        border = new Rectangle(pane.getPrefWidth() + 20, pane.getPrefHeight() + 20, Color.LIGHTGRAY);       //sets the border for the engine animation
         border.setStroke(Color.BLACK);
         border.setX(0);
         border.setY(0);
