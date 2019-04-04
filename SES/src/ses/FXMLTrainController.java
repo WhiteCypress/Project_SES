@@ -9,7 +9,6 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -20,10 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
@@ -109,7 +106,7 @@ public class FXMLTrainController implements Initializable {
     }
 
     @FXML
-    private void startTrainButtonAction(ActionEvent event) {                  //calculate all the values relie on the time change
+    private void startTrainButtonAction(ActionEvent event) {                  //calculate all the values relying on the time change
         Engine engine = FXMLEngineController.engine;
         train = new Train();
 
@@ -143,12 +140,12 @@ public class FXMLTrainController implements Initializable {
     }
 
     @FXML
-    private void getMassTrainSliderValue() {                                    //display the values for mass train
+    private void getMassTrainSliderValue() {                                    //displays the values for mass train
         massTrainLabel.setText(formater.format(massTrainSlider.getValue()) + " kg");
     }
 
     @FXML
-    private void getRunTimeSliderValue() {                                      //display the values for mass train
+    private void getRunTimeSliderValue() {                                      //displays the values for run time
         runTimeLabel.setText(formater.format(runTimeSlider.getValue()) + " sec");
     }
 
@@ -158,7 +155,7 @@ public class FXMLTrainController implements Initializable {
 
         flatPane.setBackground(AssetManager.getLandscapeBackground());
 
-        massTrainSlider.setMin(100000);
+        massTrainSlider.setMin(100000);             //set default values for mass of train slider
         massTrainSlider.setMax(10000000);
         massTrainSlider.setValue(100000);
         massTrainSlider.setShowTickLabels(true);
@@ -168,14 +165,14 @@ public class FXMLTrainController implements Initializable {
 
         getMassTrainSliderValue();
 
-        massTrainSlider.valueProperty().addListener(new ChangeListener() {
+        massTrainSlider.valueProperty().addListener(new ChangeListener() {          //displays the values of the slider as they change 
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 massTrainLabel.setText(
                         String.valueOf(formater.format((int) massTrainSlider.getValue()) + " kg"));
             }
         });
 
-        runTimeSlider.setMin(1);
+        runTimeSlider.setMin(1);             //set default values for run time slider
         runTimeSlider.setMax(90);
         runTimeSlider.setValue(0);
         runTimeSlider.setShowTickLabels(true);
@@ -184,14 +181,14 @@ public class FXMLTrainController implements Initializable {
 
         getRunTimeSliderValue();
 
-        runTimeSlider.valueProperty().addListener(new ChangeListener() {
+        runTimeSlider.valueProperty().addListener(new ChangeListener() {              //displays the values of the slider as they change 
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 runTimeLabel.setText(
                         String.valueOf(formater.format((int) runTimeSlider.getValue()) + " sec"));
             }
         });
 
-        // force the field to be numeric only
+        //forces the field to be numeric only
         startTrainButton.setDisable(true);
         angleText.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -203,7 +200,7 @@ public class FXMLTrainController implements Initializable {
                 }
                 try {
                     userMessageLabel.setText("Project SES");
-                    if (Double.parseDouble(newValue) > 52) {
+                    if (Double.parseDouble(newValue) > 52) {        //sets the maximum angle to 52
                         angleText.setText("52");
                     }
                 } catch (Exception e) {
@@ -213,11 +210,11 @@ public class FXMLTrainController implements Initializable {
             }
         });
 
-        backgroundFlatA = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), AssetManager.getLandscape());
+        backgroundFlatA = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), AssetManager.getLandscape());     //creates and sets a background for the flat animation
         backgroundFlatA.setX(0);
         backgroundFlatA.setY(0);
         backgroundFlatA.setVisible(true);
-        backgroundFlatA.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
+        backgroundFlatA.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));         //ensures that the image stays within the confines of the box
         addToFlatPane(backgroundFlatA);
         flatPane.toBack();
 
@@ -233,27 +230,27 @@ public class FXMLTrainController implements Initializable {
         backgroundAngleA.setY(0);
         backgroundAngleA.setVisible(true);
 
-        trainA = new Rectangle(75, 30);
+        trainA = new Rectangle(75, 30);         //creates and sets a train for the animation on flat
         trainA.setX(75);
         trainA.setY(flatPane.getPrefHeight() / 1.22 - trainA.getHeight());
         trainA.setFill(AssetManager.getTrain());
         trainA.setVisible(true);
 
-        trainB = new Rectangle(75, 30);
+        trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
         trainB.setX(anglePane.getPrefWidth() / 2 - 65);
         trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
-        flatTrack = new Line(0, flatPane.getPrefHeight() / 1.22, flatPane.getPrefWidth(), flatPane.getPrefHeight() / 1.22);
+        flatTrack = new Line(0, flatPane.getPrefHeight() / 1.22, flatPane.getPrefWidth(), flatPane.getPrefHeight() / 1.22);              //creates and sets a traintrack for the animation on flat
         flatTrack.setVisible(true);
         addToFlatPane(flatTrack);
         addToFlatPane(trainA);
         flatTrack.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
 
-        angleTrack = new Line(0, anglePane.getPrefHeight() / 1.05, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.05);
+        angleTrack = new Line(0, anglePane.getPrefHeight() / 1.05, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.05);              //creates and sets a traintrack for the animation on flat
         angleTrack.setVisible(true);
-        trainAndTrackPane.getChildren().addAll(angleTrack, trainB);
+        trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
 
         trainAndTrackPane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         anglePane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
@@ -261,7 +258,7 @@ public class FXMLTrainController implements Initializable {
 
     }
 
-    private double getAngle() {
+    private double getAngle() {                 //converts the angle from degrees to radian
         double angleValue = Double.parseDouble(angleText.getText());
         angleValue = Math.toRadians(angleValue);
         return anglePane.getPrefWidth() * Math.tan(angleValue);
@@ -271,12 +268,8 @@ public class FXMLTrainController implements Initializable {
     private void startTrainFlatAnimation() {
 
         Engine engine = FXMLEngineController.engine;
-//        massTrain = massTrainSlider.getValue();
-//        runTime = runTimeSlider.getValue();
-//        angle = Double.parseDouble(angleText.getText());
         power = engine.calcPower();
 
-//        Train tA = new Train(massTrain, power, 0, runTime);
         lastFrameTime = 0.0f;
         long initialTime = System.nanoTime();
 
@@ -292,11 +285,11 @@ public class FXMLTrainController implements Initializable {
                 double maxSpeed = train.calculateMaxVeloctiyFlat();
                 double computedSpeed = Double.parseDouble(accelerationFlatLabel.getText().split(" ")[0]) * currentTime;
 
-                TRAINA_SPEED = computedSpeed > maxSpeed ? maxSpeed : computedSpeed;
+                TRAINA_SPEED = computedSpeed > maxSpeed ? maxSpeed : computedSpeed;             //determines the speed of the train
 
-                currentSpeedFlatLabel.setText(formater.format(TRAINA_SPEED) + " m/s");
+                currentSpeedFlatLabel.setText(formater.format(TRAINA_SPEED) + " m/s");          //displays dynamic speed value
 
-                if (currentTime <= runTime) {
+                if (currentTime <= runTime) {               //moves the background according to velocity to create the animation on flat surce
                     if (backgroundFlatA.getX() + backgroundFlatA.getWidth() >= 0) {
                         backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
                     } else {
