@@ -41,6 +41,10 @@ public class Train {
         this.angle = angle/360*2*3.1415926;
         this.maxFlatTime = maxFlatTime;
     }
+    
+    public void setAngle(double angle){
+        this.angle = angle/360*2*3.1415926;
+    }
 
     public void setMovTime(double movTime) {                //set the value for move time
         this.movTime = movTime;
@@ -89,7 +93,7 @@ public class Train {
     }
     
     public double calculateCurrentPositionOnRamp(double currentTime){
-        return vMaxFlat*currentTime - 1/2*(Math.cos(angle)*9.8)*currentTime;
+        return (vMaxFlat+calculateVelocityAngle(currentTime))/2*currentTime;
     }
     
 }

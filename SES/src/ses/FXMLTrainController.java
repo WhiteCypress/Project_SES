@@ -90,7 +90,7 @@ public class FXMLTrainController implements Initializable {
     double power;
     double TRAINA_SPEED = 5;
     double TRAINB_SPEED = 5;
-    
+
     double trainPosition;
 
     Train train;
@@ -238,7 +238,7 @@ public class FXMLTrainController implements Initializable {
 
         trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
         trainB.setX(anglePane.getPrefWidth() / 2 - 65);
-        trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight());
+        trainB.setY(anglePane.getPrefHeight() / 2 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
@@ -248,7 +248,7 @@ public class FXMLTrainController implements Initializable {
         addToFlatPane(trainA);
         flatTrack.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
 
-        angleTrack = new Line(0, anglePane.getPrefHeight() / 1.05, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.05);              //creates and sets a traintrack for the animation on flat
+        angleTrack = new Line(0, anglePane.getPrefHeight()/2, anglePane.getPrefWidth(), anglePane.getPrefHeight()/2);              //creates and sets a traintrack for the animation on flat
         angleTrack.setVisible(true);
         trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
 
@@ -312,7 +312,6 @@ public class FXMLTrainController implements Initializable {
         }.start();
     }
 
-
     private void startTrainAngleAnimation() {           //same as the privious method rn
         lastFrameTimeB = 0.0f;
         long initialTime = System.nanoTime();
@@ -325,32 +324,16 @@ public class FXMLTrainController implements Initializable {
                 double frameDeltaTime = currentTime - lastFrameTimeB;
                 lastFrameTime = currentTime;
 
+                train.setAngle(Double.parseDouble(angleText.getText()));
                 speedRampLabel.setText(formater.format(train.calculateVelocityAngle(currentTime)) + " m/s");
                 trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
-                System.out.println("Train position");
-//                double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
-                //TRAINB_SPEED = position;
 
-//                double maxSpeed = Double.parseDouble(vMaxFlatLabel.getText().split(" ")[0]);
-//                double computedSpeed = Double.parseDouble(accelerationFlatLabel.getText().split(" ")[0]) * currentTime;
-                //TRAINA_SPEED = computedSpeed > maxSpeed ? maxSpeed : computedSpeed;
-                //currentSpeedFlatLabel.setText(formater.format(TRAINA_SPEED) + " m/s");
-//                int runB = 0;
-//                if (currentTime <= runTime) {
-//                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() >= 0) {
-//                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
-//                    } else {
-//                        backgroundFlatA.setX(backgroundFlatB.getWidth() - TRAINA_SPEED);
-//                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
-//                    }
-//
-//                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() >= 0) {
-//                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
-//                    } else {
-//                        backgroundFlatB.setX(backgroundFlatA.getWidth() - TRAINA_SPEED);
-//                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
-//                    }
-//                }
+                trainB.setX((anglePane.getPrefWidth() / 2 - 65) + 3 * frameDeltaTime * train.calculateVelocityAngle(currentTime));       //require change or line 330 and 331
+                //trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight() - 3 * frameDeltaTime *train.calculateVelocityAngle(currentTime));
+
+                if(trainPosition <= 0){
+                    this.stop();
+                }
             }
 
         }.start();
