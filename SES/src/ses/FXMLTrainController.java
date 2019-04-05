@@ -5,6 +5,7 @@
  */
 package ses;
 
+import static java.lang.Math.cos;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
@@ -133,7 +134,7 @@ public class FXMLTrainController implements Initializable {
         }
 
         double angle = -Double.parseDouble(angleText.getText());
-        trainAndTrackPane.setRotate(angle);
+        trainAndTrackPane.setRotate(angle);             //rotates angle track and train according to the angle
         startTrainFlatAnimation();
         //startTrainAngleAnimation();
 
@@ -225,10 +226,12 @@ public class FXMLTrainController implements Initializable {
         backgroundFlatB.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
         addToFlatPane(backgroundFlatB);
 
-        backgroundAngleA = new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight(), Color.LIGHTGRAY);
+        backgroundAngleA = new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight(), AssetManager.getLandscape());
         backgroundAngleA.setX(0);
         backgroundAngleA.setY(0);
         backgroundAngleA.setVisible(true);
+        addToAnglePane(backgroundAngleA);
+        anglePane.toBack();
 
         trainA = new Rectangle(75, 30);         //creates and sets a train for the animation on flat
         trainA.setX(75);
@@ -251,16 +254,17 @@ public class FXMLTrainController implements Initializable {
         angleTrack = new Line(0, anglePane.getPrefHeight()/2, anglePane.getPrefWidth(), anglePane.getPrefHeight()/2);              //creates and sets a traintrack for the animation on flat
         angleTrack.setVisible(true);
         trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
-
+        trainAndTrackPane.toFront();
+        
         trainAndTrackPane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         anglePane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         angleTrack.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
 
     }
 
-    private double getAngle() {                 //converts the angle from degrees to radian
+    private double getAngle() {
         double angleValue = Double.parseDouble(angleText.getText());
-        angleValue = Math.toRadians(angleValue);
+        angleValue = Math.toRadians(angleValue);            //converts the angle from degrees to radian
         return anglePane.getPrefWidth() * Math.tan(angleValue);
 //        return Double.parseDouble(angleText.getText());
     }
