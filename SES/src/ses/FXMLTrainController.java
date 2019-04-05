@@ -92,6 +92,8 @@ public class FXMLTrainController implements Initializable {
     double TRAINA_SPEED = 5;
     double TRAINB_SPEED = 5;
 
+    double trainPosition;
+
     Train train;
 
     DecimalFormat formater = new DecimalFormat("###.##");
@@ -126,7 +128,7 @@ public class FXMLTrainController implements Initializable {
             accelerationFlatLabel.setText(formater.format(train.calculateAccerlationFlat()) + " m/s^2");
             distanceRampLabel.setText(formater.format(train.calculateDistanceOnRamp()) + " m");
             heightRampLabel.setText(formater.format(train.calculateHeightOnRamp()) + " m");
-            speedRampLabel.setText(formater.format(train.calculateVelocityAngle(runTime)) + " m/s");
+//            speedRampLabel.setText(formater.format(train.calculateVelocityAngle(runTime)) + " m/s");
         } catch (Exception e) {
             userMessageLabel.setText("Error! Calculation cannot proceed!");
         }
@@ -239,7 +241,7 @@ public class FXMLTrainController implements Initializable {
 
         trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
         trainB.setX(anglePane.getPrefWidth() / 2 - 65);
-        trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight());
+        trainB.setY(anglePane.getPrefHeight() / 2 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
@@ -249,7 +251,7 @@ public class FXMLTrainController implements Initializable {
         addToFlatPane(trainA);
         flatTrack.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
 
-        angleTrack = new Line(0, anglePane.getPrefHeight() / 1.05, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.05);              //creates and sets a traintrack for the animation on flat
+        angleTrack = new Line(0, anglePane.getPrefHeight()/2, anglePane.getPrefWidth(), anglePane.getPrefHeight()/2);              //creates and sets a traintrack for the animation on flat
         angleTrack.setVisible(true);
         trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
         trainAndTrackPane.toFront();
@@ -325,31 +327,17 @@ public class FXMLTrainController implements Initializable {
                 double currentTime = (now - initialTime) / 1000000000.0;
                 double frameDeltaTime = currentTime - lastFrameTimeB;
                 lastFrameTime = currentTime;
-                double position = frameDeltaTime * Double.parseDouble(distanceFlatLabel.getText().split(" ")[0]) / runTimeSlider.getValue();
-                //TRAINB_SPEED = position;
 
-                double maxSpeed = Double.parseDouble(vMaxFlatLabel.getText().split(" ")[0]);
-                double computedSpeed = Double.parseDouble(accelerationFlatLabel.getText().split(" ")[0]) * currentTime;
+                train.setAngle(Double.parseDouble(angleText.getText()));
+                speedRampLabel.setText(formater.format(train.calculateVelocityAngle(currentTime)) + " m/s");
+                trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
 
-                //TRAINA_SPEED = computedSpeed > maxSpeed ? maxSpeed : computedSpeed;
-                currentSpeedFlatLabel.setText(formater.format(TRAINA_SPEED) + " m/s");
+                trainB.setX((anglePane.getPrefWidth() / 2 - 65) + 3 * frameDeltaTime * train.calculateVelocityAngle(currentTime));       //require change or line 330 and 331
+                //trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight() - 3 * frameDeltaTime *train.calculateVelocityAngle(currentTime));
 
-//                int runB = 0;
-//                if (currentTime <= runTime) {
-//                    if (backgroundFlatA.getX() + backgroundFlatA.getWidth() >= 0) {
-//                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
-//                    } else {
-//                        backgroundFlatA.setX(backgroundFlatB.getWidth() - TRAINA_SPEED);
-//                        backgroundFlatA.setX(backgroundFlatA.getX() - TRAINA_SPEED);
-//                    }
-//
-//                    if (backgroundFlatB.getX() + backgroundFlatB.getWidth() >= 0) {
-//                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
-//                    } else {
-//                        backgroundFlatB.setX(backgroundFlatA.getWidth() - TRAINA_SPEED);
-//                        backgroundFlatB.setX(backgroundFlatB.getX() - TRAINA_SPEED);
-//                    }
-//                }
+                if(trainPosition <= 0){
+                    this.stop();
+                }
             }
 
         }.start();
