@@ -240,7 +240,7 @@ public class FXMLTrainController implements Initializable {
         trainA.setVisible(true);
 
         trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
-        trainB.setX(anglePane.getPrefWidth() / 2 - 65);
+        trainB.setX(0);
         trainB.setY(anglePane.getPrefHeight() / 2 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
@@ -255,14 +255,14 @@ public class FXMLTrainController implements Initializable {
         angleTrack.setVisible(true);
         trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
         trainAndTrackPane.toFront();
-        
+
         trainAndTrackPane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         anglePane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         angleTrack.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
 
     }
 
-    private double getAngle() {
+    private double getAngle() {                 //converts the angle from degrees to radian
         double angleValue = Double.parseDouble(angleText.getText());
         angleValue = Math.toRadians(angleValue);            //converts the angle from degrees to radian
         return anglePane.getPrefWidth() * Math.tan(angleValue);
@@ -332,14 +332,13 @@ public class FXMLTrainController implements Initializable {
                 speedRampLabel.setText(formater.format(train.calculateVelocityAngle(currentTime)) + " m/s");
                 trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
 
-                trainB.setX((anglePane.getPrefWidth() / 2 - 65) + 3 * frameDeltaTime * train.calculateVelocityAngle(currentTime));       //require change or line 330 and 331
-                //trainB.setY(anglePane.getPrefHeight() / 1.05 - trainB.getHeight() - 3 * frameDeltaTime *train.calculateVelocityAngle(currentTime));
+                trainB.setX((int)(1.5 * trainPosition));       //require change or line 330 and 331
+                System.out.println(trainPosition);          //display this in a lable
 
                 if(trainPosition <= 0){
                     this.stop();
                 }
             }
-
         }.start();
     }
 
