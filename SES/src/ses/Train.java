@@ -70,7 +70,7 @@ public class Train {
 
     public double calculateDistanceOnRamp() {
         //double Vfinal = vMaxFlat-(Math.cos(0.5*3.1415926-angle))*9.8*maxFlatTime;
-        double maxTimeGoFront = vMaxFlat/(Math.cos(0.5*3.1415926-angle)*9.8);
+        double maxTimeGoFront = vMaxFlat/(Math.cos(angle)*9.8);
         distanceOnRamp = vMaxFlat/2*maxTimeGoFront;
         //distanceOnRamp = (vMaxFlat+Vfinal)/2*maxFlatTime;
         
@@ -78,7 +78,7 @@ public class Train {
     }
 
     public double calculateHeightOnRamp() {
-        distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
+        distanceY =  calculateDistanceOnRamp()*Math.sin(angle);
         
         return distanceY;
     }
