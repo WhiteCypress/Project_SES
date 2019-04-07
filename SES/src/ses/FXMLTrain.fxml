@@ -12,8 +12,8 @@
       <Slider fx:id="massTrainSlider" layoutX="522.0" layoutY="69.0" prefHeight="16.0" prefWidth="194.0" />
       <Label layoutX="522.0" layoutY="165.0" text="Train Run Time (sec)" />
       <Slider fx:id="runTimeSlider" layoutX="522.0" layoutY="193.0" prefHeight="16.0" prefWidth="194.0" />
-      <Button fx:id="startTrainButton" layoutX="525.0" layoutY="382.0" mnemonicParsing="false" onAction="#startTrainButtonAction" prefWidth="194.0" text="Click to run train simulation! " />
-      <Label layoutX="522.0" layoutY="296.0" text="Angle of the ramp:" />
+      <Button fx:id="startTrainButton" layoutX="522.0" layoutY="382.0" mnemonicParsing="false" onAction="#startTrainButtonAction" prefHeight="27.0" prefWidth="194.0" text="Click to run train simulation! " />
+      <Label layoutX="522.0" layoutY="296.0" text="Angle of the Ramp:" />
       <TextField fx:id="angleText" layoutX="644.0" layoutY="291.0" prefHeight="27.0" prefWidth="60.0" />
       <Label layoutX="21.0" layoutY="470.0" text="Maximum velocity on flat surface:" />
       <Label layoutX="21.0" layoutY="438.0" text="Distance travelled on flat surface:" />
