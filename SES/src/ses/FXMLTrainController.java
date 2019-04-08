@@ -24,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 
 /**
  * FXML Controller class
@@ -83,6 +84,8 @@ public class FXMLTrainController implements Initializable {
     @FXML
     private Label currentSpeedFlatLabel;
 
+    private Rectangle rect;
+
     private double lastFrameTime = 0.0;
     private double lastFrameTimeB = 0.0;
     double massTrain;
@@ -135,6 +138,12 @@ public class FXMLTrainController implements Initializable {
 
         double angle = -Double.parseDouble(angleText.getText());
         trainAndTrackPane.setRotate(angle);             //rotates angle track and train according to the angle
+
+        rect = new Rectangle(angleTrack.getStartX() - 200, angleTrack.getStartY(), anglePane.getPrefWidth() * 2, anglePane.getPrefHeight() * 2);
+        rect.setFill(Color.web("#ed4b00"));
+        rect.getTransforms().add(new Rotate(angle, angleTrack.getStartX(), angleTrack.getStartY()));
+        addToAnglePane(rect);
+        
         startTrainFlatAnimation();  //startTrainAngleAnimation();
 
     }
@@ -240,7 +249,7 @@ public class FXMLTrainController implements Initializable {
 
         trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
         trainB.setX(80);
-        trainB.setY(anglePane.getPrefHeight() /2 - trainB.getHeight());
+        trainB.setY(anglePane.getPrefHeight() / 2 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
@@ -333,10 +342,10 @@ public class FXMLTrainController implements Initializable {
                 speedRampLabel.setText(formater.format(train.calculateVelocityAngle(currentTime)) + " m/s");
                 trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
 
-                trainB.setX(80+(int)(0.5*trainPosition));       //require change or line 330 and 331
+                trainB.setX(80 + (int) (0.5 * trainPosition));       //require change or line 330 and 331
                 System.out.println(trainPosition);          //display this in a lable
 
-                if (trainPosition <= 0 || trainB.getX()*Math.sin(train.angle) >= anglePane.getPrefHeight() || trainB.getX()*Math.cos(train.angle) >= anglePane.getPrefWidth()) {
+                if (trainPosition <= 0 || trainB.getX() * Math.sin(train.angle) >= anglePane.getPrefHeight() || (trainB.getX() + 75) * Math.cos(train.angle) >= anglePane.getPrefWidth()) {
                     this.stop();
                 }
             }
