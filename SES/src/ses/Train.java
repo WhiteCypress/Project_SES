@@ -16,7 +16,7 @@ public class Train {
 
     private double massTrain;
     private double energy;
-    private double angle;
+    double angle;
     private double distanceFlat;
     private double distanceX;
     private double distanceY;

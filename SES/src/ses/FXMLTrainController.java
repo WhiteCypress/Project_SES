@@ -135,8 +135,7 @@ public class FXMLTrainController implements Initializable {
 
         double angle = -Double.parseDouble(angleText.getText());
         trainAndTrackPane.setRotate(angle);             //rotates angle track and train according to the angle
-        startTrainFlatAnimation();
-        //startTrainAngleAnimation();
+        startTrainFlatAnimation();  //startTrainAngleAnimation();
 
     }
 
@@ -240,8 +239,8 @@ public class FXMLTrainController implements Initializable {
         trainA.setVisible(true);
 
         trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
-        trainB.setX(0);
-        trainB.setY(anglePane.getPrefHeight() / 2 - trainB.getHeight());
+        trainB.setX(80);
+        trainB.setY(anglePane.getPrefHeight() /2 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
@@ -251,7 +250,9 @@ public class FXMLTrainController implements Initializable {
         addToFlatPane(trainA);
         flatTrack.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
 
-        angleTrack = new Line(0, anglePane.getPrefHeight()/2, anglePane.getPrefWidth(), anglePane.getPrefHeight()/2);              //creates and sets a traintrack for the animation on flat
+        angleTrack = new Line(0, anglePane.getPrefHeight() / 2, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 2);              //creates and sets a traintrack for the animation on flat
+        //angleTrack = new Line(0, anglePane.getPrefHeight() / 2+150, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 2+150);              //creates and sets a traintrack for the animation on flat
+        //angleTrack.setStrokeWidth(300);
         angleTrack.setVisible(true);
         trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
         trainAndTrackPane.toFront();
@@ -332,10 +333,10 @@ public class FXMLTrainController implements Initializable {
                 speedRampLabel.setText(formater.format(train.calculateVelocityAngle(currentTime)) + " m/s");
                 trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
 
-                trainB.setX((int)(1.5 * trainPosition));       //require change or line 330 and 331
+                trainB.setX(80+(int)(0.5*trainPosition));       //require change or line 330 and 331
                 System.out.println(trainPosition);          //display this in a lable
 
-                if(trainPosition <= 0){
+                if (trainPosition <= 0 || trainB.getX()*Math.sin(train.angle) >= anglePane.getPrefHeight() || trainB.getX()*Math.cos(train.angle) >= anglePane.getPrefWidth()) {
                     this.stop();
                 }
             }
