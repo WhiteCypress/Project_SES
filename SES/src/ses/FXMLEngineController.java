@@ -240,16 +240,18 @@ public class FXMLEngineController implements Initializable {
             if (error == 0) {
                 vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
                 enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+                userMessageLabel.setText("Project SES");
                 startEngineAnimation();
             }
         } catch (Exception e) {
             userMessageLabel.setText("Error! Calculation cannot proceed!");                     //message label
         }
+        
     }
 
     @FXML
     private void getVolContSliderValue() {                                      //display the value of volume of container
-        volContLabel.setText(volContSlider.getValue() + " L");
+        volContLabel.setText(formater.format(volContSlider.getValue()) + " L");
     }
 
     @FXML

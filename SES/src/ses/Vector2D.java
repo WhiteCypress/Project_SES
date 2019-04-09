@@ -8,7 +8,7 @@ package ses;
 
 /**
  *
- * @author bergeron
+ * @author zoewong
  */
 public class Vector2D {
     private double x;

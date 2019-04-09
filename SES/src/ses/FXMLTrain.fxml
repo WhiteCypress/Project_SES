@@ -37,5 +37,7 @@
       <Label fx:id="userMessageLabel" alignment="CENTER" layoutX="25.0" layoutY="569.0" prefWidth="700.0" text="Project SES" />
       <Label layoutX="21.0" layoutY="537.0" text="Current speed on flat surface:" />
       <Label fx:id="currentSpeedFlatLabel" layoutX="215.0" layoutY="537.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label layoutX="392.0" layoutY="537.0" text="Current position on ramp:" />
+      <Label fx:id="currentPositionAngleLabel" layoutX="561.0" layoutY="537.0" prefHeight="17.0" prefWidth="93.0" />
    </children>
 </AnchorPane>
