@@ -18,18 +18,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
 import javafx.scene.control.Button;
-
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -244,16 +240,18 @@ public class FXMLEngineController implements Initializable {
             if (error == 0) {
                 vapTimeLabel.setText(formater.format(engine.calcVapTime()) + " s");
                 enginePowerLabel.setText(formater.format(engine.calcPower()) + " W");
+                userMessageLabel.setText("Project SES");
                 startEngineAnimation();
             }
         } catch (Exception e) {
             userMessageLabel.setText("Error! Calculation cannot proceed!");                     //message label
         }
+        
     }
 
     @FXML
     private void getVolContSliderValue() {                                      //display the value of volume of container
-        volContLabel.setText(volContSlider.getValue() + " L");
+        volContLabel.setText(formater.format(volContSlider.getValue()) + " L");
     }
 
     @FXML
