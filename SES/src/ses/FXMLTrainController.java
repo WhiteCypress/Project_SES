@@ -5,7 +5,6 @@
  */
 package ses;
 
-import static java.lang.Math.cos;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
@@ -23,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
@@ -66,9 +66,11 @@ public class FXMLTrainController implements Initializable {
     @FXML
     private Button startTrainButton;
     @FXML
-    private Line angleTrack;
+    private Polygon angleTrack;
     @FXML
     private Line flatTrack;
+    @FXML
+    private Line angleTrackLine;
     @FXML
     private Rectangle trainA;
     @FXML
@@ -83,8 +85,6 @@ public class FXMLTrainController implements Initializable {
     private Label userMessageLabel;
     @FXML
     private Label currentSpeedFlatLabel;
-
-    private Rectangle rect;
 
     private double lastFrameTime = 0.0;
     private double lastFrameTimeB = 0.0;
@@ -131,19 +131,21 @@ public class FXMLTrainController implements Initializable {
             accelerationFlatLabel.setText(formater.format(train.calculateAccerlationFlat()) + " m/s^2");
             distanceRampLabel.setText(formater.format(train.calculateDistanceOnRamp()) + " m");
             heightRampLabel.setText(formater.format(train.calculateHeightOnRamp()) + " m");
-//            speedRampLabel.setText(formater.format(train.calculateVelocityAngle(runTime)) + " m/s");
         } catch (Exception e) {
             userMessageLabel.setText("Error! Calculation cannot proceed!");
         }
 
-        double angle = -Double.parseDouble(angleText.getText());
-        trainAndTrackPane.setRotate(angle);             //rotates angle track and train according to the angle
+        double trainLocationOnPane = anglePane.getPrefHeight() / 1.22;
 
-        rect = new Rectangle(angleTrack.getStartX() - 200, angleTrack.getStartY(), anglePane.getPrefWidth() * 2, anglePane.getPrefHeight() * 2);
-        rect.setFill(Color.web("#ed4b00"));
-        rect.getTransforms().add(new Rotate(angle, angleTrack.getStartX(), angleTrack.getStartY()));
-        addToAnglePane(rect);
-        
+        double angle = -Double.parseDouble(angleText.getText());
+        Rotate rotation = new Rotate(angle, 0, trainLocationOnPane);
+
+        trainAndTrackPane.getTransforms().clear();
+        trainAndTrackPane.getTransforms().add(rotation);    //rotates angle track and train according to the angle
+        angleTrack.getPoints().addAll(new Double[]{         //creates a polygon to fill the bottom of the track with the coordinates
+            0.0, trainLocationOnPane,
+            anglePane.getPrefWidth(), trainLocationOnPane,
+            anglePane.getPrefWidth(), getIntersectionLineAndY(),});
         startTrainFlatAnimation();  //startTrainAngleAnimation();
 
     }
@@ -248,35 +250,39 @@ public class FXMLTrainController implements Initializable {
         trainA.setVisible(true);
 
         trainB = new Rectangle(75, 30);         //creates and sets a train for the animation on angle
-        trainB.setX(80);
-        trainB.setY(anglePane.getPrefHeight() / 2 - trainB.getHeight());
+        trainB.setX(0);
+        trainB.setY(anglePane.getPrefHeight() / 1.22 - trainB.getHeight());
         trainB.setFill(AssetManager.getTrain());
         trainB.setVisible(true);
 
-        flatTrack = new Line(0, flatPane.getPrefHeight() / 1.22, flatPane.getPrefWidth(), flatPane.getPrefHeight() / 1.22);              //creates and sets a traintrack for the animation on flat
+        flatTrack = new Line(0, flatPane.getPrefHeight() / 1.22, flatPane.getPrefWidth(), flatPane.getPrefHeight() / 1.22);          //creates and sets a train track for the animation on flat
         flatTrack.setVisible(true);
         addToFlatPane(flatTrack);
         addToFlatPane(trainA);
         flatTrack.setClip(new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight()));
 
-        angleTrack = new Line(0, anglePane.getPrefHeight() / 2, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 2);              //creates and sets a traintrack for the animation on flat
-        //angleTrack = new Line(0, anglePane.getPrefHeight() / 2+150, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 2+150);              //creates and sets a traintrack for the animation on flat
-        //angleTrack.setStrokeWidth(300);
-        angleTrack.setVisible(true);
-        trainAndTrackPane.getChildren().addAll(angleTrack, trainB);         //allows the train and the tracktrain to become angled together
-        trainAndTrackPane.toFront();
+        angleTrackLine = new Line(0, anglePane.getPrefHeight() / 1.22, anglePane.getPrefWidth(), anglePane.getPrefHeight() / 1.22);          //creates a train track for the angled animation
+        angleTrack = new Polygon();
+        angleTrack.setFill(Color.DARKKHAKI);
 
+        angleTrack.setVisible(true);
+        angleTrackLine.setVisible(true);
+        trainAndTrackPane.getChildren().addAll(angleTrackLine, trainB);         //allows the train and the train track to become angled together
+        trainAndTrackPane.toFront();
+        addToAnglePane(angleTrack);
+
+        //makes sure they do not exceed the allowed space
         trainAndTrackPane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         anglePane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         angleTrack.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
+        angleTrackLine.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
 
     }
 
-    private double getAngle() {                 //converts the angle from degrees to radian
+    private double getIntersectionLineAndY() {              //converts the angle from degrees to radian
         double angleValue = Double.parseDouble(angleText.getText());
         angleValue = Math.toRadians(angleValue);            //converts the angle from degrees to radian
-        return anglePane.getPrefWidth() * Math.tan(angleValue);
-//        return Double.parseDouble(angleText.getText());
+        return (anglePane.getPrefHeight() / 1.22) - (anglePane.getPrefWidth() * Math.tan(angleValue));      //returns position of the intersection between track and right most border
     }
 
     private void startTrainFlatAnimation() {
@@ -295,7 +301,6 @@ public class FXMLTrainController implements Initializable {
                 double frameDeltaTime = currentTime - lastFrameTime;
                 lastFrameTime = currentTime;
 
-                //double maxSpeed = Double.parseDouble(vMaxFlatLabel.getText().split(" ")[0]);
                 double maxSpeed = train.calculateMaxVeloctiyFlat();
                 double computedSpeed = Double.parseDouble(accelerationFlatLabel.getText().split(" ")[0]) * currentTime;
 
@@ -343,7 +348,7 @@ public class FXMLTrainController implements Initializable {
                 trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
 
                 trainB.setX(80 + (int) (0.5 * trainPosition));       //require change or line 330 and 331
-                System.out.println(trainPosition);          //display this in a lable
+                System.out.println(trainPosition);          //display this in a label
 
                 if (trainPosition <= 0 || trainB.getX() * Math.sin(train.angle) >= anglePane.getPrefHeight() || (trainB.getX() + 75) * Math.cos(train.angle) >= anglePane.getPrefWidth()) {
                     this.stop();
@@ -351,5 +356,4 @@ public class FXMLTrainController implements Initializable {
             }
         }.start();
     }
-
 }
