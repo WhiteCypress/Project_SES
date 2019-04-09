@@ -15,7 +15,7 @@
       <Button fx:id="startTrainButton" layoutX="522.0" layoutY="382.0" mnemonicParsing="false" onAction="#startTrainButtonAction" prefHeight="27.0" prefWidth="194.0" text="Click to run train simulation! " />
       <Label layoutX="522.0" layoutY="296.0" text="Angle of the Ramp:" />
       <TextField fx:id="angleText" layoutX="644.0" layoutY="291.0" prefHeight="27.0" prefWidth="60.0" />
-      <Label layoutX="21.0" layoutY="470.0" text="Maximum velocity on flat surface:" />
+      <Label layoutX="21.0" layoutY="470.0" text="Maximum speed on flat surface:" />
       <Label layoutX="21.0" layoutY="438.0" text="Distance travelled on flat surface:" />
       <Label layoutX="21.0" layoutY="503.0" text="Acceleration on flat surface:" />
       <Label layoutX="392.0" layoutY="438.0" text="Maximum distance travelled on ramp:" />
@@ -25,8 +25,8 @@
       <Label fx:id="vMaxFlatLabel" layoutX="237.0" layoutY="470.0" prefHeight="17.0" prefWidth="93.0" />
       <Label fx:id="distanceRampLabel" layoutX="630.0" layoutY="438.0" prefHeight="17.0" prefWidth="93.0" />
       <Label fx:id="heightRampLabel" layoutX="613.0" layoutY="470.0" prefHeight="17.0" prefWidth="93.0" />
-      <Label layoutX="392.0" layoutY="503.0" text="Current speed on ramp:" />
-      <Label fx:id="speedRampLabel" layoutX="547.0" layoutY="503.0" prefHeight="17.0" prefWidth="93.0" />
+      <Label layoutX="392.0" layoutY="503.0" text="Current velocity on ramp:" />
+      <Label fx:id="speedRampLabel" layoutX="559.0" layoutY="503.0" prefHeight="17.0" prefWidth="93.0" />
       <Label fx:id="massTrainLabel" alignment="CENTER_RIGHT" layoutX="522.0" layoutY="106.0" onDragDetected="#getMassTrainSliderValue" prefHeight="17.0" prefWidth="182.0" text="kg" />
       <Label fx:id="runTimeLabel" alignment="CENTER_RIGHT" layoutX="522.0" layoutY="229.0" onDragDetected="#getRunTimeSliderValue" prefHeight="17.0" prefWidth="182.0" text="sec" />
       <AnchorPane fx:id="flatPane" layoutX="19.0" layoutY="17.0" maxWidth="-Infinity" prefHeight="170.0" prefWidth="450.0" />
