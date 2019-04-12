@@ -20,7 +20,7 @@ public class Engine {
     String materialComb;
     double liquidMass;
 
-    double fireTemp;    //all these are derived values              all values from here to latentVapHeat come from www.engineeringtoolbox.com
+    double fireTemp;    //all these are derived values, all values from here to latentVapHeat come from www.engineeringtoolbox.com
     double transferConstant;
     double liquidBoilPoint;
     double liquidSpecificHeat;
@@ -34,11 +34,12 @@ public class Engine {
     double liquidMoles;
     double tempLiquid;
     double pressure;
+    double currentPressure = 0;
 
     double area = 0.01;     //this is the area of the button and it's set to be 50-sqcm by default
 
     final double SIConvertion = 1000;
-    
+
     public Engine() {
 
     }
@@ -55,13 +56,13 @@ public class Engine {
         this.liquidMass = calcLiquidMass();
         deriveFireTemp();
         deriveTransferConstant();
-        
+
         calcMoles();
         calcLiquidMass();
         calcHeatTransferRate();
     }
-  
-    public String getMaterialCont() {
+
+    public String getMaterialCont() {           //general getters and setters
         return materialCont;
     }
 
@@ -166,7 +167,7 @@ public class Engine {
             case "cobalt":
                 transferConstant = 122;
                 break;
-            
+
             case "gold":
                 transferConstant = 327;
 
@@ -280,7 +281,6 @@ public class Engine {
         double tempChangeInCont = (energyTranfered) / (liquidMass * liquidSpecificHeat);//it should be calculated each frame
         if (tempLiquid < liquidBoilPoint) {
             tempLiquid = tempLiquid + tempChangeInCont;
-            System.out.println("Difference in Q is: " + energyTranfered);
         }
         return tempLiquid;            //maybe i should add it automatically, also this is kinda similar to calcBoilTime()
     }
@@ -289,8 +289,25 @@ public class Engine {
         pressure = liquidMoles * 8.3144598 * tempLiquid / volCont;
         return pressure;
     }
+    
+    public double calcCurrentPressure(double vapTime, double currentTime) {
+        if (currentTime <= vapTime) {
+           currentPressure = currentTime / vapTime * liquidMoles * 8.3144598 * liquidBoilPoint / volCont;
+        }
+        return currentPressure;
+    }
 
-    public double calcPower() {
+    public double calcPopOutTime() {                 //calculates when will the button popout
+        int time = 0;
+        while (calcPressure() < 300) {
+            time++;
+            calcTempInCont(heatTransferRate * time);
+        }
+
+        return time;
+    }
+
+    public double calcPower() {             //calculates the power of the engine 
         power = (liquidMoles * 8.3144598 * liquidBoilPoint / volCont) / liquidDensity * liquidMass;
 
         return power;

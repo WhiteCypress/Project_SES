@@ -6,7 +6,6 @@
 package ses;
 
 import static java.lang.Math.sqrt;
-
 /**
  *
  * @author zoewong
@@ -15,11 +14,10 @@ public class Train {
 
     private double massTrain;
     private double energy;
-    private double angle;
+    double angle;
     private double distanceFlat;
     private double distanceX;
     private double distanceY;
-    //private double distanceNetAngle;
     private double distanceOnRamp;
     private double timeTravelledOnRamp;
     private double accelerationFlat;
@@ -28,57 +26,71 @@ public class Train {
     private double vMaxFlat;
     private double trainCurrentVelocity;
     private double power;
-    
-    double maxFLatTime;
-    
+
+    double maxFlatTime;
+
+    public Train() {
+
+    }
+
     public Train(double massTrain, double power, double angle, double maxFlatTime) {
         this.massTrain = massTrain;
         this.power = power;
-        this.angle = angle;
-        this.maxFLatTime = maxFlatTime;
+        this.angle = angle / 360 * 2 * 3.1415926;
+        this.maxFlatTime = maxFlatTime;
     }
-    
-    public void setMovTime(double movTime){
+
+    public void setAngle(double angle) {
+        this.angle = angle / 360 * 2 * 3.1415926;           //converts angle from deg to rad
+    }
+
+    public void setMovTime(double movTime) {                //sets the value for move time
         this.movTime = movTime;
     }
 
-    public double calculateMaxVeloctiyFlat() {
-        vMaxFlat = Math.abs(sqrt((2 * movTime * power) / massTrain));
+    public double calculateMaxVeloctiyFlat() {              //calculates the maximum possible velocity for the flat surface
+        vMaxFlat = Math.abs(sqrt((2 * maxFlatTime * power) / massTrain));
 
         return vMaxFlat;
     }
 
-    public double calculateDistanceFlat() {
-        distanceFlat = vMaxFlat/2 * movTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
+    public double calculateDistanceFlat() {             //calculates the max distance on flat surface in a set time
+        distanceFlat = vMaxFlat / 2 * maxFlatTime;
 
         return distanceFlat;
     }
 
-    public double calculateAccerlationFlat() {
+    public double calculateAccerlationFlat() {          //calculates the accelaration on flat surface
         accelerationFlat = (Math.pow(vMaxFlat, 2)) / (2 * distanceFlat);
 
         return accelerationFlat;
     }
 
-    public double calculateDistanceOnRamp() {
-        //distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
-        distanceY = vMaxFlat * Math.sin(angle)*(movTime-maxFLatTime)+ 0.5*(-9.8)*(movTime-maxFLatTime)*(movTime-maxFLatTime);
-        timeTravelledOnRamp = (vMaxFlat * Math.sin(angle)) / 9.81;
-        distanceX = vMaxFlat * Math.cos(angle) * timeTravelledOnRamp;
-        distanceOnRamp = Math.sqrt((Math.pow(distanceX, 2)) + (Math.pow(distanceY, 2)));
+    public double calculateDistanceOnRamp() {          //calculates the max distance on ramp in a set time 
+        double maxTimeGoFront = vMaxFlat / (Math.sin(angle) * 9.8);
+        distanceOnRamp = vMaxFlat / 2 * maxTimeGoFront;
 
         return distanceOnRamp;
     }
 
-    public double calculateHeightOnRamp(){
-        distanceY = Math.pow(vMaxFlat * Math.sin(angle), 2) / (2 * 9.81);
-
+    public double calculateHeightOnRamp() {         //calculates the max height reached on ramp in a set time
+        if (angle == 0) {
+            distanceY = 0;
+        } else {
+            distanceY = calculateDistanceOnRamp() * Math.sin(angle);
+        }
         return distanceY;
     }
-    public double calculateVelocityAngle(double time) {
-        vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
 
+    public double calculateVelocityAngle(double time) {         //calculates instantaneous velocity on ramp
+        vAngle = vMaxFlat - (Math.sin(angle) * 9.8) * time;
+        //do not erase
+        //vAngle = (vYI-9.8*time)/Math.sin(angle);
         return vAngle;
+    }
+
+    public double calculateCurrentPositionOnRamp(double currentTime) {      //calculates instataneous position of train on ramp
+        return (vMaxFlat + calculateVelocityAngle(currentTime)) / 2 * currentTime;
     }
 
 }
