@@ -6,8 +6,6 @@
 package ses;
 
 import static java.lang.Math.sqrt;
-import javafx.scene.shape.Rectangle;
-
 /**
  *
  * @author zoewong
@@ -43,41 +41,39 @@ public class Train {
     }
 
     public void setAngle(double angle) {
-        this.angle = angle / 360 * 2 * 3.1415926;
+        this.angle = angle / 360 * 2 * 3.1415926;           //converts angle from deg to rad
     }
 
-    public void setMovTime(double movTime) {                //set the value for move time
+    public void setMovTime(double movTime) {                //sets the value for move time
         this.movTime = movTime;
     }
 
-    public double calculateMaxVeloctiyFlat() {              //calculate the maximum possible value for the flat surface
+    public double calculateMaxVeloctiyFlat() {              //calculates the maximum possible velocity for the flat surface
         vMaxFlat = Math.abs(sqrt((2 * maxFlatTime * power) / massTrain));
 
         return vMaxFlat;
     }
 
-    public double calculateDistanceFlat() {             //calculate the max distant on distance in a set time
-        distanceFlat = vMaxFlat / 2 * maxFlatTime; //energy/(vMaxFlat/4)*2 not sure m*g*d = KE
+    public double calculateDistanceFlat() {             //calculates the max distance on flat surface in a set time
+        distanceFlat = vMaxFlat / 2 * maxFlatTime;
 
         return distanceFlat;
     }
 
-    public double calculateAccerlationFlat() {          //calculate the accelaration
+    public double calculateAccerlationFlat() {          //calculates the accelaration on flat surface
         accelerationFlat = (Math.pow(vMaxFlat, 2)) / (2 * distanceFlat);
 
         return accelerationFlat;
     }
 
-    public double calculateDistanceOnRamp() {
-        //double Vfinal = vMaxFlat-(Math.cos(0.5*3.1415926-angle))*9.8*maxFlatTime;
+    public double calculateDistanceOnRamp() {          //calculates the max distance on ramp in a set time 
         double maxTimeGoFront = vMaxFlat / (Math.sin(angle) * 9.8);
         distanceOnRamp = vMaxFlat / 2 * maxTimeGoFront;
-        //distanceOnRamp = (vMaxFlat+Vfinal)/2*maxFlatTime;
 
         return distanceOnRamp;
     }
 
-    public double calculateHeightOnRamp() {
+    public double calculateHeightOnRamp() {         //calculates the max height reached on ramp in a set time
         if (angle == 0) {
             distanceY = 0;
         } else {
@@ -86,16 +82,14 @@ public class Train {
         return distanceY;
     }
 
-    public double calculateVelocityAngle(double time) {
-//        vAngle = Math.sqrt(Math.pow(Math.cos(angle) * vMaxFlat, 2) + Math.pow(Math.sin(angle) * vMaxFlat * time / (Math.pow(10, 9)), 2));
-//        double vYI = Math.sin(angle)*vMaxFlat;
+    public double calculateVelocityAngle(double time) {         //calculates instantaneous velocity on ramp
         vAngle = vMaxFlat - (Math.sin(angle) * 9.8) * time;
         //do not erase
         //vAngle = (vYI-9.8*time)/Math.sin(angle);
         return vAngle;
     }
 
-    public double calculateCurrentPositionOnRamp(double currentTime) {
+    public double calculateCurrentPositionOnRamp(double currentTime) {      //calculates instataneous position of train on ramp
         return (vMaxFlat + calculateVelocityAngle(currentTime)) / 2 * currentTime;
     }
 
