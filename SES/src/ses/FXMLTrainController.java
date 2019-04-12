@@ -363,6 +363,7 @@ public class FXMLTrainController implements Initializable {
                 if (trainPosition <= 0 || trainB.getX() * Math.sin(train.angle) >= anglePane.getPrefHeight()    //makes sure that train stops when it reaches the top of the allowed space
                         || (trainB.getX() + 75) * Math.cos(train.angle) >= anglePane.getPrefWidth()) {
                     this.stop();
+                    userMessageLabel.setText("Simulation End");
                 }
             }
         }.start();

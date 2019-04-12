@@ -250,7 +250,7 @@ public class FXMLEngineController implements Initializable {
 
     @FXML
     private void getVolContSliderValue() {                                      //displays the value of volume of container
-        volContLabel.setText(formater.format(volContSlider.getValue()) + " L");
+        volContLabel.setText(formater.format((int)volContSlider.getValue()) + " L");
     }
 
     @FXML
@@ -285,7 +285,7 @@ public class FXMLEngineController implements Initializable {
         volContSlider.valueProperty().addListener(new ChangeListener() {           //displays the values of the slider as they change 
             public void changed(ObservableValue arg0, Object arg1, Object arg2) {
                 volContLabel.setText(
-                        String.valueOf((int) volContSlider.getValue() + " L"));
+                        String.valueOf(formater.format((int) volContSlider.getValue()) + " L"));
 
                 inputVolCont = (int) volContSlider.getValue();
             }
