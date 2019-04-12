@@ -118,7 +118,7 @@ public class FXMLTrainController implements Initializable {
         Engine engine = FXMLEngineController.engine;
         train = new Train();
 
-        try {
+        try {                                           //makes sure there are no errors with inputs
             massTrain = massTrainSlider.getValue();
             runTime = runTimeSlider.getValue();
             angle = Double.parseDouble(angleText.getText());
@@ -147,11 +147,11 @@ public class FXMLTrainController implements Initializable {
 
         trainAndTrackPane.getTransforms().clear();
         trainAndTrackPane.getTransforms().add(rotation);    //rotates angle track and train according to the angle
-        angleTrack.getPoints().addAll(new Double[]{ //creates a polygon to fill the bottom of the track with the coordinates
+        angleTrack.getPoints().addAll(new Double[]{     //creates a polygon to fill the bottom of the track using coordinates
             0.0, trainLocationOnPane,
             anglePane.getPrefWidth(), trainLocationOnPane,
             anglePane.getPrefWidth(), getIntersectionLineAndY(),});
-        startTrainFlatAnimation();  //startTrainAngleAnimation();
+        startTrainFlatAnimation();
 
     }
 
@@ -236,7 +236,7 @@ public class FXMLTrainController implements Initializable {
         addToFlatPane(backgroundFlatA);
         flatPane.toBack();
 
-        backgroundFlatB = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), AssetManager.getLandscape());
+        backgroundFlatB = new Rectangle(flatPane.getPrefWidth(), flatPane.getPrefHeight(), AssetManager.getLandscape());     //creates a second image used to show train movement
         backgroundFlatB.setX(backgroundFlatA.getWidth());
         backgroundFlatB.setY(0);
         backgroundFlatB.setVisible(true);
@@ -277,16 +277,16 @@ public class FXMLTrainController implements Initializable {
         trainAndTrackPane.toFront();
         addToAnglePane(angleTrack);
 
-        //makes sure they do not exceed the allowed space
+        //makes sure graphics do not exceed the allowed space
         trainAndTrackPane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         anglePane.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         angleTrack.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
         angleTrackLine.setClip(new Rectangle(anglePane.getPrefWidth(), anglePane.getPrefHeight()));
     }
 
-    private double getIntersectionLineAndY() {              //converts the angle from degrees to radian
+    private double getIntersectionLineAndY() {              
         double angleValue = Double.parseDouble(angleText.getText());
-        angleValue = Math.toRadians(angleValue);            //converts the angle from degrees to radian
+        angleValue = Math.toRadians(angleValue);                         //converts the angle from degrees to radian
         return (anglePane.getPrefHeight() / 1.22) - (anglePane.getPrefWidth() * Math.tan(angleValue));      //returns position of the intersection between track and right most border
     }
 
@@ -336,7 +336,7 @@ public class FXMLTrainController implements Initializable {
         }.start();
     }
 
-    private void startTrainAngleAnimation() {           //same as the privious method rn
+    private void startTrainAngleAnimation() {
         lastFrameTimeB = 0.0f;
         long initialTime = System.nanoTime();
 
@@ -348,19 +348,20 @@ public class FXMLTrainController implements Initializable {
                 double frameDeltaTime = currentTime - lastFrameTimeB;
                 lastFrameTime = currentTime;
 
-                train.setAngle(Double.parseDouble(angleText.getText()));
+                train.setAngle(Double.parseDouble(angleText.getText()));        //sets angle for the ramp
                 speedRampLabel.setText(formater.format(train.calculateVelocityAngle(currentTime)) + " m/s");
                 trainPosition = train.calculateCurrentPositionOnRamp(currentTime);
 
-                trainB.setX((int) (0.5 * trainPosition));       //require change or line 330 and 331
+                trainB.setX((int) (0.5 * trainPosition));       //sets the train position according on ramp
                 if (trainPosition <= 0) {
                     currentPositionAngleLabel.setText(0 + " m");
 
                 } else {
-                    currentPositionAngleLabel.setText(formater.format(trainPosition) + " m");
-                }          //display this in a label
+                    currentPositionAngleLabel.setText(formater.format(trainPosition) + " m");       //displays current position of train
+                }  
 
-                if (trainPosition <= 0 || trainB.getX() * Math.sin(train.angle) >= anglePane.getPrefHeight() || (trainB.getX() + 75) * Math.cos(train.angle) >= anglePane.getPrefWidth()) {
+                if (trainPosition <= 0 || trainB.getX() * Math.sin(train.angle) >= anglePane.getPrefHeight()    //makes sure that train stops when it reaches the top of the allowed space
+                        || (trainB.getX() + 75) * Math.cos(train.angle) >= anglePane.getPrefWidth()) {
                     this.stop();
                 }
             }

@@ -104,7 +104,7 @@ public class FXMLEngineController implements Initializable {
     }
 
     @FXML
-    private void launchTrainButtonAction(ActionEvent event) throws IOException {                //creat a train window and replace this window with it
+    private void launchTrainButtonAction(ActionEvent event) throws IOException {                //creat a train window and replace engine window with it
         Parent gameParent = FXMLLoader.load(getClass().getResource("FXMLTrain.fxml"));
         Scene gameScene = new Scene(gameParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -115,8 +115,8 @@ public class FXMLEngineController implements Initializable {
 
     private void startEngineAnimation() {
         if (!materialContList.getValue().equals("Material of Container") && !typeLiqList.getValue().equals("Type of Liquid") && !volLiqText.getText().equals("") && !materialCombList.getValue().equals("Material of Combustion")) {
-            startEngine.setDisable(true);
-            launchTrain.setDisable(false);
+            startEngine.setDisable(true);       //disables engine button once it is clicked
+            launchTrain.setDisable(false);      //enables train button once engine button is clicked
 
             BALLS_NUMBER = (int) (inputVolLiq * 2);
 
@@ -169,13 +169,12 @@ public class FXMLEngineController implements Initializable {
                             r.setY(oldLineYPosition - BAR_SPEED - 20);
                         } else {
                             r.setY(oldLineYPosition - BAR_SPEED - 40);
-                            //AssetManager.getEngineSound().play();
                         }
 
                         double newLineYPosition = l.getEndY();
                         double multiplier = frameDeltaTime / (PARTICLE_SPEED / 2 * newLineYPosition) * 1000;
                         double topCap = 0.22;       //sets the maximum height of the bar
-                        if (multiplier > topCap) {
+                        if (multiplier > topCap) {  //sets when the engine cap pops
                             multiplier = topCap;
                         }
 
@@ -233,7 +232,7 @@ public class FXMLEngineController implements Initializable {
 
         } catch (Exception e) {
             error = 1;
-            userMessageLabel.setText("Error! Please make sure your input is valid!");               //message label
+            userMessageLabel.setText("Error! Please make sure your input is valid!");             
         }
 
         try {
@@ -244,18 +243,18 @@ public class FXMLEngineController implements Initializable {
                 startEngineAnimation();
             }
         } catch (Exception e) {
-            userMessageLabel.setText("Error! Calculation cannot proceed!");                     //message label
+            userMessageLabel.setText("Error! Calculation cannot proceed!");               
         }
         
     }
 
     @FXML
-    private void getVolContSliderValue() {                                      //display the value of volume of container
+    private void getVolContSliderValue() {                                      //displays the value of volume of container
         volContLabel.setText(formater.format(volContSlider.getValue()) + " L");
     }
 
     @FXML
-    private void getThicContSliderValue() {                                     //display the value of thickness of container
+    private void getThicContSliderValue() {                                     //displays the value of thickness of container
         thicContLabel.setText(formater.format(thicContSlider.getValue()) + " m");
     }
 
@@ -272,7 +271,7 @@ public class FXMLEngineController implements Initializable {
         materialCombList.getItems().addAll("stove", "natural gas", "methane",
                 "hydrogen", "carbon monoxide", "wood", "charcoal");
 
-        volContSlider.setMin(5);                                                //set default values for the volume of container slider
+        volContSlider.setMin(5);                    //set default values for the volume of container slider
         volContSlider.setMax(500);
         volContSlider.setValue(250);
         volContSlider.setShowTickLabels(true);
@@ -292,7 +291,7 @@ public class FXMLEngineController implements Initializable {
             }
         });
 
-        thicContSlider.setMin(0.01);                                                //set default values for the thickness of container slider
+        thicContSlider.setMin(0.01);               //set default values for the thickness of container slider
         thicContSlider.setMax(0.1);
         thicContSlider.setValue(0.05);
         thicContSlider.setShowTickLabels(true);

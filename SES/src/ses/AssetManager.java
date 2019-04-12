@@ -21,7 +21,7 @@ public class AssetManager {
     }
 
     static public void preloadAllAssets() {
-        // Preload all images
+        // Preload all images (train backgrounds and train)
         try {
             landscape = new ImagePattern(new Image(fileURL("./assets/images/landscape.png")));
 
@@ -41,15 +41,15 @@ public class AssetManager {
         }
 
     }
-    static public Background getLandscapeBackground() {
+    static public Background getLandscapeBackground() {        //gets background for the landscape
         return landscapeBackground;
     }
     
-    static public ImagePattern getLandscape() {     //load images of the landscape
+    static public ImagePattern getLandscape() {     //gets image of the landscape
         return landscape;
     }
 
-    public static ImagePattern getTrain() {     //get an image for the train
+    public static ImagePattern getTrain() {     //gets an image for the train
         return train;
     }
 }

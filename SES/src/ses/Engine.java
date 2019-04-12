@@ -20,7 +20,7 @@ public class Engine {
     String materialComb;
     double liquidMass;
 
-    double fireTemp;    //all these are derived values              all values from here to latentVapHeat come from www.engineeringtoolbox.com
+    double fireTemp;    //all these are derived values, all values from here to latentVapHeat come from www.engineeringtoolbox.com
     double transferConstant;
     double liquidBoilPoint;
     double liquidSpecificHeat;
